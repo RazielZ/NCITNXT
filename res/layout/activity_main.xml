@@ -28,9 +28,9 @@
         android:id="@+id/m1b1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/m2b1"
+        android:layout_alignRight="@+id/testconnectbutton"
         android:layout_below="@+id/testtext"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="42dp"
         android:text="M1 B1" />
 
     <Button
@@ -39,16 +39,36 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/m1b1"
         android:layout_alignBottom="@+id/m1b1"
-        android:layout_centerHorizontal="true"
+        android:layout_alignRight="@+id/testtext"
+        android:layout_marginRight="48dp"
         android:text="M1 B2" />
 
     <Button
         android:id="@+id/m2b1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/m1b1"
         android:layout_below="@+id/m1b1"
-        android:layout_toLeftOf="@+id/m2b2"
+        android:layout_marginTop="29dp"
         android:text="M2 B1" />
+
+    <Button
+        android:id="@+id/m3b2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/m2b2"
+        android:layout_below="@+id/m2b2"
+        android:layout_marginTop="46dp"
+        android:text="M3 B2" />
+
+    <Button
+        android:id="@+id/m3b1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/m3b2"
+        android:layout_alignBottom="@+id/m3b2"
+        android:layout_alignLeft="@+id/m2b1"
+        android:text="M3 B1" />
 
     <Button
         android:id="@+id/m2b2"
@@ -60,19 +80,11 @@
         android:text="M2 B2" />
 
     <Button
-        android:id="@+id/m3b1"
+        android:id="@+id/modeswitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/m2b1"
-        android:layout_below="@+id/m2b1"
-        android:text="M3 B1" />
-
-    <Button
-        android:id="@+id/m3b2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/m2b2"
-        android:layout_below="@+id/m2b2"
-        android:text="M3 B2" />
+        android:layout_alignRight="@+id/testtext"
+        android:layout_alignTop="@+id/testconnectbutton"
+        android:text="Mode" />
 
 </RelativeLayout>
