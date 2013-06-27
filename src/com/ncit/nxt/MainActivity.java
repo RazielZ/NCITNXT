@@ -1,33 +1,32 @@
 package com.ncit.nxt;
 import java.util.ArrayList;
 
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.os.PowerManager;
-import android.preference.PreferenceManager;
-import android.R.integer;
+import android.R.bool;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.PowerManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.Window;
 import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements SensorEventListener {
 
 	private static final int REQUEST_ENABLE_BT = 1;
 	private static final int REQUEST_CONNECT_DEVICE = 2;
@@ -54,6 +53,9 @@ public class MainActivity extends Activity {
 
 	private boolean mRegulateSpeed = true;
 	private boolean mSynchronizeMotors = false;
+	private SensorManager mSensorManager;
+	private Sensor mSensor;
+	private Sensor mOrientation;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -67,13 +69,6 @@ public class MainActivity extends Activity {
 			if (mDeviceAddress != null) {
 				mSavedState = NXTTalker.STATE_CONNECTED;
 			}
-
-			if (savedInstanceState.containsKey("power")) {
-				//	mPower = savedInstanceState.getInt("power");
-			}
-			if (savedInstanceState.containsKey("controls_mode")) {
-				//./mControlsMode = savedInstanceState.getInt("controls_mode");
-			}
 		}
 
 		mPowerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -86,6 +81,11 @@ public class MainActivity extends Activity {
 			finish();
 			return;
 		}
+		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+		mOrientation = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+		mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
+		mSensorManager.registerListener(this, mOrientation, SensorManager.SENSOR_DELAY_NORMAL);
 
 		setupUI();
 
@@ -124,17 +124,13 @@ public class MainActivity extends Activity {
 		testStatusTextView = (TextView) findViewById(R.id.testtext);
 
 		for (int i = 0; i<motorButtons.size(); i++) {
-			boolean dir = false;
-			if (i%2==1) {
-				dir = true;
-			}
 			switch (i) {
-			case 0: motorButtons.get(i).setOnTouchListener(new MotorButtonListener(0,true,1.0d,50)); break;
-			case 1: motorButtons.get(i).setOnTouchListener(new MotorButtonListener(0,false,1.0d,50)); break;
-			case 2: motorButtons.get(i).setOnTouchListener(new MotorButtonListener(1,true,1.0d,50)); break;
-			case 3: motorButtons.get(i).setOnTouchListener(new MotorButtonListener(1,false,1.0d,50)); break;
-			case 4: motorButtons.get(i).setOnTouchListener(new MotorButtonListener(2,true,1.0d,50)); break;
-			case 5: motorButtons.get(i).setOnTouchListener(new MotorButtonListener(2,false,1.0d,50)); break;
+			case 0: motorButtons.get(i).setOnTouchListener(new MotorButtonListener(0,true,1.0d,5)); break;
+			case 1: motorButtons.get(i).setOnTouchListener(new MotorButtonListener(0,false,1.0d,5)); break;
+			case 2: motorButtons.get(i).setOnTouchListener(new MotorButtonListener(1,true,1.0d,5)); break;
+			case 3: motorButtons.get(i).setOnTouchListener(new MotorButtonListener(1,false,1.0d,5)); break;
+			case 4: motorButtons.get(i).setOnTouchListener(new MotorButtonListener(2,true,1.0d,5)); break;
+			case 5: motorButtons.get(i).setOnTouchListener(new MotorButtonListener(2,false,1.0d,5)); break;
 			default: motorButtons.get(i).setOnTouchListener(new MotorButtonListener(i/2,false,1.0d,0)); break;
 			}
 			//	motorButtons.get(i).setOnTouchListener(new MotorButtonListener((short)(i%3),dir,1.0d,50));
@@ -259,11 +255,8 @@ public class MainActivity extends Activity {
 
 		@Override
 		public boolean onTouch(View v, MotionEvent event) {
-			//Log.i("NXT", "onTouch event: " + Integer.toString(event.getAction()));
 			int action = event.getAction();
-			//if ((action == MotionEvent.ACTION_DOWN) || (action == MotionEvent.ACTION_MOVE)) {
 			if (action == MotionEvent.ACTION_DOWN) {
-	//			Log.d("Rev", "Direction is: "+mReverse);
 				byte fPower = (byte) (power*motormod);
 				Log.d("MMOD", "Motormod: "+motormod);
 				Log.d("cPWR", "Current Power: "+power);
@@ -283,4 +276,86 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
+	@Override
+	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+		// TODO Auto-generated method stub
+
+	}
+
+	private float lastValues[] = new float[3];
+	private double initialOri;
+	boolean firstOrientation = true;
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		mSensorManager.unregisterListener(this);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
+		mSensorManager.registerListener(this, mOrientation, SensorManager.SENSOR_DELAY_NORMAL);
+	}
+
+
+
+	@Override
+	public void onSensorChanged(SensorEvent event) {
+		if (event.sensor == mSensor) {
+			float linear_acceleration[] = new float[3];
+			// Remove the gravity contribution with the high-pass filter.
+			linear_acceleration[0] = event.values[0];
+			linear_acceleration[1] = event.values[1];
+			linear_acceleration[2] = event.values[2];
+
+			//DO STUFF WITH CURRENT-LAST
+
+			//overr last
+			lastValues[0] = linear_acceleration[0];
+			lastValues[1] = linear_acceleration[1];
+			lastValues[2] = linear_acceleration[2];
+
+			//	Log.d("LA", "Linear X: "+linear_acceleration[0]);
+			if (Math.abs(linear_acceleration[0])>5) {
+				byte power = (byte) (20*Math.signum(linear_acceleration[0]));
+				//		Log.d("ACPWR","Power :"+power);
+				mNXTTalker.motor(mNXTTalker.MOTOR1, power, mRegulateSpeed, mSynchronizeMotors);
+			} else {
+				mNXTTalker.motor(mNXTTalker.MOTOR1, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
+			}
+			if (Math.abs(linear_acceleration[1])>4) {
+				byte power = (byte) (20*Math.signum(linear_acceleration[1]));
+				//	Log.d("ACPWR","Power :"+power);
+				mNXTTalker.motor(mNXTTalker.MOTOR2, power, mRegulateSpeed, mSynchronizeMotors);
+			} else {
+				mNXTTalker.motor(mNXTTalker.MOTOR2, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
+			}
+		} else {
+			//Log.d("ORI", "Orientation: "+event.values.toString());
+			Log.d("ORI1", "Orientation value 1: "+event.values[0]);
+			if (firstOrientation) {
+				initialOri = event.values[0];
+				firstOrientation = false;
+			} else {
+				double currentOri = event.values[0];
+				currentOri -= initialOri;
+				if (currentOri<0) {
+					currentOri = 360 + currentOri;
+				}
+				if (currentOri<180&&currentOri>30) {
+					byte power = (byte) (12);
+					mNXTTalker.motor(mNXTTalker.MOTOR3, power, mRegulateSpeed, mSynchronizeMotors);
+				} else if (currentOri<330&&currentOri>180) {
+					byte power = (byte) (-12);
+					mNXTTalker.motor(mNXTTalker.MOTOR3, power, mRegulateSpeed, mSynchronizeMotors);
+				} else {
+					mNXTTalker.motor(mNXTTalker.MOTOR3, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
+				}
+			}
+		}
+	}
 }
+
+
