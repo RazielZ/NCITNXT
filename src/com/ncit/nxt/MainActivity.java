@@ -246,7 +246,7 @@ public class MainActivity extends Activity {
 			motormod = powerMod;
 			this.power = power;
 			if (!dir){
-				power *= -1;
+				this.power *= -1;
 				Log.d("PWR", "Power: "+power);
 			}
 			switch (motor){ 
@@ -265,6 +265,9 @@ public class MainActivity extends Activity {
 			if (action == MotionEvent.ACTION_DOWN) {
 	//			Log.d("Rev", "Direction is: "+mReverse);
 				byte fPower = (byte) (power*motormod);
+				Log.d("MMOD", "Motormod: "+motormod);
+				Log.d("cPWR", "Current Power: "+power);
+				Log.d("fPWR", "Final Power: "+fPower);
 				mNXTTalker.motor(motorB, fPower, mRegulateSpeed, mSynchronizeMotors);
 			} else if ((action == MotionEvent.ACTION_UP) || (action == MotionEvent.ACTION_CANCEL)) {
 				mNXTTalker.motor(motorB, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
