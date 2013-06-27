@@ -1,0 +1,78 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity" >
+
+    <TextView
+        android:id="@+id/testtext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:text="@string/hello_world" />
+
+    <Button
+        android:id="@+id/testconnectbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:text="Connect" />
+
+    <Button
+        android:id="@+id/m1b1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/m2b1"
+        android:layout_below="@+id/testtext"
+        android:layout_marginTop="40dp"
+        android:text="M1 B1" />
+
+    <Button
+        android:id="@+id/m1b2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/m1b1"
+        android:layout_alignBottom="@+id/m1b1"
+        android:layout_centerHorizontal="true"
+        android:text="M1 B2" />
+
+    <Button
+        android:id="@+id/m2b1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/m1b1"
+        android:layout_toLeftOf="@+id/m2b2"
+        android:text="M2 B1" />
+
+    <Button
+        android:id="@+id/m2b2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/m2b1"
+        android:layout_alignBottom="@+id/m2b1"
+        android:layout_alignLeft="@+id/m1b2"
+        android:text="M2 B2" />
+
+    <Button
+        android:id="@+id/m3b1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/m2b1"
+        android:layout_below="@+id/m2b1"
+        android:text="M3 B1" />
+
+    <Button
+        android:id="@+id/m3b2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/m2b2"
+        android:layout_below="@+id/m2b2"
+        android:text="M3 B2" />
+
+</RelativeLayout>
