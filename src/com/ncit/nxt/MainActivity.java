@@ -1,7 +1,6 @@
 package com.ncit.nxt;
 import java.util.ArrayList;
 
-import android.R.bool;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -23,6 +22,8 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,6 +61,13 @@ public class MainActivity extends Activity implements SensorEventListener {
 	private Sensor mSensor;
 	private Sensor mOrientation;
 	private String stateText = "";
+	
+	private int speedMotors[] = new int[3];
+	
+	private SeekBar seekBars[] = new SeekBar[3];
+	
+	private Button bVerticalLine;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -117,6 +125,88 @@ public class MainActivity extends Activity implements SensorEventListener {
 	}
 
 	private void setupUI() {
+		
+		//Buton pentru desenare linie verticala
+		bVerticalLine = (Button) findViewById(R.id.bVerticalLine);
+		
+		bVerticalLine.setOnTouchListener(new OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+				
+				new Thread(new Runnable() {
+
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						byte dPower[] = new byte[2];
+						
+						dPower[0] = (byte) (speedMotors[0]);
+						dPower[1] = (byte) (speedMotors[1]);
+						
+						mNXTTalker.motor(NXTTalker.MOTOR1, dPower[0], mRegulateSpeed, mSynchronizeMotors);
+						mNXTTalker.motor(NXTTalker.MOTOR2, dPower[1], mRegulateSpeed, mSynchronizeMotors);
+						try {
+							Thread.sleep(500);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						mNXTTalker.motor(NXTTalker.MOTOR1, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
+						mNXTTalker.motor(NXTTalker.MOTOR2, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
+					}
+					
+				}).start();
+				
+
+				return true;
+			}
+		});
+		
+		seekBars[0] = (SeekBar) findViewById(R.id.speedM1);
+		seekBars[1] = (SeekBar) findViewById(R.id.speedM2);
+		seekBars[2] = (SeekBar) findViewById(R.id.speedM3);
+		
+		for (int i = 0; i < speedMotors.length; i++) {
+			speedMotors[i] = seekBars[i].getProgress();
+		}
+		
+		for (SeekBar s : seekBars) {
+			s.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+				
+				@Override
+				public void onStopTrackingTouch(SeekBar seekBar) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void onStartTrackingTouch(SeekBar seekBar) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void onProgressChanged(SeekBar seekBar, int progress,
+						boolean fromUser) {
+					// TODO Auto-generated method stub
+					if (seekBar == seekBars[0]) {
+						speedMotors[0] = progress;
+					}
+					if (seekBar == seekBars[1]) {
+						speedMotors[1] = progress;
+					}
+					if (seekBar == seekBars[2]) {
+						speedMotors[2] = progress;
+					}
+					
+					Log.d("SpeedBars", "Speed 1, 2, 3: " + speedMotors[0] + " " + speedMotors[1] + " " + speedMotors[2]);
+					
+				}
+			});
+		}
+		
 		motorButtons.add((Button) findViewById(R.id.m1b1));
 		motorButtons.add((Button) findViewById(R.id.m1b2));
 		motorButtons.add((Button) findViewById(R.id.m2b1));
@@ -134,7 +224,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 			case 3: motorButtons.get(i).setOnTouchListener(new MotorButtonListener(1,false,1.0d,15)); break;
 			case 4: motorButtons.get(i).setOnTouchListener(new MotorButtonListener(2,true,1.0d,8)); break;
 			case 5: motorButtons.get(i).setOnTouchListener(new MotorButtonListener(2,false,1.0d,8)); break;
-			default: motorButtons.get(i).setOnTouchListener(new MotorButtonListener(i/2,false,1.0d,0)); break;
+			default: motorButtons.get(i).setOnTouchListener(new MotorButtonListener(i/2,false,1.0d,15)); break;
 			}
 			//	motorButtons.get(i).setOnTouchListener(new MotorButtonListener((short)(i%3),dir,1.0d,50));
 		}
@@ -260,7 +350,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 		public MotorButtonListener(int motor, boolean dir, double powerMod, int power) {
 			motormod = powerMod;
 			this.power = power;
-			if (dir){
+			if (!dir){
 				if (motor!=0) {
 					this.power *= -1;
 				}
@@ -271,22 +361,39 @@ public class MainActivity extends Activity implements SensorEventListener {
 			}
 			Log.d("PWR", "Power: "+power);
 			switch (motor){ 
-			case 0: motorB = NXTTalker.MOTOR1; break;
-			case 1: motorB = NXTTalker.MOTOR2; break;
-			case 2: motorB = NXTTalker.MOTOR3; break;
-			default: motorB = NXTTalker.MOTOR1; break;
+				case 0: motorB = NXTTalker.MOTOR1; break;
+				case 1: motorB = NXTTalker.MOTOR2; break;
+				case 2: motorB = NXTTalker.MOTOR3; break;
+				default: motorB = NXTTalker.MOTOR1; break;
 			}
 		}
 
 		@Override
 		public boolean onTouch(View v, MotionEvent event) {
 			int action = event.getAction();
+			
+			switch (motorB) {
+			
+				case NXTTalker.MOTOR1: Log.d("SIGN", "SIGN0= " + Math.round(Math.signum(power)));
+										power = speedMotors[0] * Math.round(Math.signum(power)); 
+										Log.d("power0", "pw0= " + power + " " + speedMotors[0]); break;
+				
+				case NXTTalker.MOTOR2: power = speedMotors[1] * (int) Math.signum(power); 
+				Log.d("power1", "pw1= " + power + " " + speedMotors[1]); break;
+				
+				case NXTTalker.MOTOR3: power = speedMotors[2] * (int) Math.signum(power); 
+				Log.d("power2", "pw2= " + power + " " + speedMotors[2]); break;
+				
+				default: power = speedMotors[0] * (int) Math.signum(power); break;
+			}
+			
 			if (!sensorMode) {
 				if (action == MotionEvent.ACTION_DOWN) {
 					byte fPower = (byte) (power*motormod);
 					Log.d("MMOD", "Motormod: "+motormod);
 					Log.d("cPWR", "Current Power: "+power);
 					Log.d("fPWR", "Final Power: "+fPower);
+					
 					mNXTTalker.motor(motorB, fPower, mRegulateSpeed, mSynchronizeMotors);
 				} else if ((action == MotionEvent.ACTION_UP) || (action == MotionEvent.ACTION_CANCEL)) {
 					mNXTTalker.motor(motorB, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
@@ -385,6 +492,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 			}
 		}
 	}
+	
+	
 }
-
 

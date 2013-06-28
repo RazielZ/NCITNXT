@@ -8,14 +8,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
 
-    <TextView
-        android:id="@+id/testtext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:text="@string/hello_world" />
-
     <Button
         android:id="@+id/testconnectbutton"
         android:layout_width="wrap_content"
@@ -25,50 +17,13 @@
         android:text="Connect" />
 
     <Button
-        android:id="@+id/m1b1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/testconnectbutton"
-        android:layout_below="@+id/testtext"
-        android:layout_marginTop="42dp"
-        android:text="M1 B1" />
-
-    <Button
         android:id="@+id/m1b2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/m1b1"
         android:layout_alignBottom="@+id/m1b1"
-        android:layout_alignRight="@+id/testtext"
         android:layout_marginRight="48dp"
         android:text="M1 B2" />
-
-    <Button
-        android:id="@+id/m2b1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/m1b1"
-        android:layout_below="@+id/m1b1"
-        android:layout_marginTop="29dp"
-        android:text="M2 B1" />
-
-    <Button
-        android:id="@+id/m3b2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/m2b2"
-        android:layout_below="@+id/m2b2"
-        android:layout_marginTop="46dp"
-        android:text="M3 B2" />
-
-    <Button
-        android:id="@+id/m3b1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/m3b2"
-        android:layout_alignBottom="@+id/m3b2"
-        android:layout_alignLeft="@+id/m2b1"
-        android:text="M3 B1" />
 
     <Button
         android:id="@+id/m2b2"
@@ -79,12 +34,98 @@
         android:layout_alignLeft="@+id/m1b2"
         android:text="M2 B2" />
 
+    <SeekBar
+        android:id="@+id/speedM1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/m3b2"
+        android:layout_marginTop="20dp"
+        android:max="100"
+        android:progress="15" />
+
+    <SeekBar
+        android:id="@+id/speedM3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/speedM2"
+        android:layout_below="@+id/speedM2"
+        android:layout_marginTop="18dp"
+        android:max="100"
+        android:progress="15" />
+
+    <SeekBar
+        android:id="@+id/speedM2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/speedM1"
+        android:layout_below="@+id/speedM1"
+        android:layout_marginTop="17dp"
+        android:max="100"
+        android:progress="15" />
+
     <Button
         android:id="@+id/modeswitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/testtext"
-        android:layout_alignTop="@+id/testconnectbutton"
+        android:layout_alignBaseline="@+id/testconnectbutton"
+        android:layout_alignBottom="@+id/testconnectbutton"
+        android:layout_alignRight="@+id/speedM3"
         android:text="Mode" />
+
+    <Button
+        android:id="@+id/m3b2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/m3b1"
+        android:layout_alignBottom="@+id/m3b1"
+        android:layout_alignLeft="@+id/m2b2"
+        android:text="M3 B2" />
+
+    <Button
+        android:id="@+id/m2b1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/m1b1"
+        android:layout_below="@+id/m1b1"
+        android:layout_marginTop="20dp"
+        android:text="M2 B1" />
+
+    <Button
+        android:id="@+id/m1b1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/speedM1"
+        android:layout_marginTop="44dp"
+        android:text="M1 B1" />
+
+    <Button
+        android:id="@+id/m3b1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/m2b1"
+        android:layout_below="@+id/m2b1"
+        android:layout_marginTop="15dp"
+        android:text="M3 B1" />
+
+    <TextView
+        android:id="@+id/testtext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/m1b2"
+        android:layout_alignLeft="@+id/m1b2"
+        android:layout_marginBottom="20dp"
+        android:text="Status" />
+
+    <Button
+        android:id="@+id/bVerticalLine"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/modeswitch"
+        android:layout_alignBottom="@+id/modeswitch"
+        android:layout_toLeftOf="@+id/m3b1"
+        android:text="VLine" />
 
 </RelativeLayout>
