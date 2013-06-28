@@ -128,4 +128,41 @@
         android:layout_toLeftOf="@+id/m3b1"
         android:text="VLine" />
 
+    <TextView
+        android:id="@+id/tvShowSpeed1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/m1b1"
+        android:layout_alignBottom="@+id/m1b1"
+        android:layout_centerHorizontal="true"
+        android:text="speed1" />
+
+    <TextView
+        android:id="@+id/tvShowSpeed2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/m2b1"
+        android:layout_alignBottom="@+id/m2b1"
+        android:layout_centerHorizontal="true"
+        android:text="speed2" />
+
+    <TextView
+        android:id="@+id/tvShowSpeed3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/m3b1"
+        android:layout_alignBottom="@+id/m3b1"
+        android:layout_centerHorizontal="true"
+        android:text="speed3" />
+
+    <Button
+        android:id="@+id/bSwitchDrawMode"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/testconnectbutton"
+        android:layout_alignBottom="@+id/testconnectbutton"
+        android:layout_toLeftOf="@+id/bVerticalLine"
+        android:text="DMode" />
+
 </RelativeLayout>

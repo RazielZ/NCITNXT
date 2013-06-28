@@ -24,7 +24,8 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f080013;
+        public static final int action_settings=0x7f080017;
+        public static final int bSwitchDrawMode=0x7f080016;
         public static final int bVerticalLine=0x7f080012;
         public static final int button_scan=0x7f080005;
         public static final int m1b1=0x7f080008;
@@ -44,6 +45,9 @@ public final class R {
         public static final int testtext=0x7f080011;
         public static final int title_new_devices=0x7f080002;
         public static final int title_paired_devices=0x7f080000;
+        public static final int tvShowSpeed1=0x7f080013;
+        public static final int tvShowSpeed2=0x7f080014;
+        public static final int tvShowSpeed3=0x7f080015;
     }
     public static final class layout {
         public static final int activity_device_chooser=0x7f030000;

@@ -51,7 +51,20 @@ public class MainActivity extends Activity implements SensorEventListener {
 	private ArrayList<Button> motorButtons = new ArrayList<Button>();
 	private Button testConnectButton;
 	private Button switchButton;
-	private TextView testStatusTextView;
+	
+	//Buton selectare mod scriere: 0 - Vertical, 1 - Orizontal etc.
+	private Button bSwitchDrawMode;
+	
+	//Variabila pentru modul de desenare selectat
+	private int drawMode = 0;
+	//Variabila pentru nr total de moduri
+	private int noDrawingModes = 4;
+	
+	//Status conexiune
+	private TextView testStatusTextView; 
+	//Afisare viteze motoare
+	private TextView tvShowSpeeds[] = new TextView[3];
+	
 
 	private boolean mRegulateSpeed = true;
 	private boolean mSynchronizeMotors = false;
@@ -62,11 +75,11 @@ public class MainActivity extends Activity implements SensorEventListener {
 	private Sensor mOrientation;
 	private String stateText = "";
 	
-	private int speedMotors[] = new int[3];
-	
-	private SeekBar seekBars[] = new SeekBar[3];
-	
+	private int speedMotors[] = new int[3];	
+	private SeekBar seekBars[] = new SeekBar[3];	
 	private Button bVerticalLine;
+	//putere pentru desenare
+	private byte drawPower[] = new byte[3];
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -126,47 +139,107 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 	private void setupUI() {
 		
-		//Buton pentru desenare linie verticala
-		bVerticalLine = (Button) findViewById(R.id.bVerticalLine);
+		//SeekBars:
+		seekBars[0] = (SeekBar) findViewById(R.id.speedM1);
+		seekBars[1] = (SeekBar) findViewById(R.id.speedM2);
+		seekBars[2] = (SeekBar) findViewById(R.id.speedM3);
 		
+		//Buton selectare mod desenare
+		bSwitchDrawMode = (Button) findViewById(R.id.bSwitchDrawMode);
+		bSwitchDrawMode.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				drawMode = (drawMode + 1) % noDrawingModes;
+				//Linie verticala stanga-dreapta
+				if (drawMode == 0) {
+					bVerticalLine.setText("VLine");
+					speedMotors[0] = 3;
+					speedMotors[1] = 10;
+					speedMotors[2] = 6;
+					seekBars[0].setProgress(3);
+					seekBars[1].setProgress(10);
+					seekBars[2].setProgress(6);
+				}
+				//Linie orizontala stanga-dreapta
+				if (drawMode == 1) {
+					bVerticalLine.setText("HLine");
+					speedMotors[0] = 3;
+					speedMotors[1] = 2;
+					speedMotors[2] = 6;
+					seekBars[0].setProgress(3);
+					seekBars[1].setProgress(2);
+					seekBars[2].setProgress(6);
+				}
+				//Linie verticala dreapta-stanga
+				if (drawMode == 2) {
+					bVerticalLine.setText("-VLine");
+					speedMotors[0] = 3;
+					speedMotors[1] = 10;
+					speedMotors[2] = 6;
+					seekBars[0].setProgress(3);
+					seekBars[1].setProgress(10);
+					seekBars[2].setProgress(6);
+				}
+				//Linie orizontala dreapta-stanga
+				if (drawMode == 3) {
+					bVerticalLine.setText("HLine");
+					speedMotors[0] = 3;
+					speedMotors[1] = 2;
+					speedMotors[2] = 6;
+					seekBars[0].setProgress(3);
+					seekBars[1].setProgress(2);
+					seekBars[2].setProgress(6);
+				}
+			}
+		});
+		
+		//Afisare viteze motoare conform seekBars
+		tvShowSpeeds[0] = (TextView) findViewById(R.id.tvShowSpeed1);
+		tvShowSpeeds[1] = (TextView) findViewById(R.id.tvShowSpeed2);
+		tvShowSpeeds[2] = (TextView) findViewById(R.id.tvShowSpeed3);
+		
+		//Buton pentru desenare linie verticala
+		bVerticalLine = (Button) findViewById(R.id.bVerticalLine);		
 		bVerticalLine.setOnTouchListener(new OnTouchListener() {
 			
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				// TODO Auto-generated method stub
 				
 				new Thread(new Runnable() {
-
+					int sleepTime = 500;
 					@Override
 					public void run() {
-						// TODO Auto-generated method stub
-						byte dPower[] = new byte[2];
 						
-						dPower[0] = (byte) (speedMotors[0]);
-						dPower[1] = (byte) (speedMotors[1]);
-						
-						mNXTTalker.motor(NXTTalker.MOTOR1, dPower[0], mRegulateSpeed, mSynchronizeMotors);
-						mNXTTalker.motor(NXTTalker.MOTOR2, dPower[1], mRegulateSpeed, mSynchronizeMotors);
-						try {
-							Thread.sleep(500);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+						if (drawMode == 0) {
+							drawVerticalLine();
+							sleepTime = 500;
+						} else {
+							if (drawMode == 1) {
+								drawHorizontalLine();
+								sleepTime = 400;
+							} else {
+								if (drawMode == 2) {
+									drawVerticalLine2(); //adica in sens invers
+								} else {
+									drawHorizontalLine2(); // adica in sens invers
+								}
+							}
 						}
-						mNXTTalker.motor(NXTTalker.MOTOR1, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
-						mNXTTalker.motor(NXTTalker.MOTOR2, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
+						
+						try {
+							Thread.sleep(sleepTime);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}						
+						stopAllMotors();
 					}
-					
 				}).start();
 				
 
 				return true;
 			}
 		});
-		
-		seekBars[0] = (SeekBar) findViewById(R.id.speedM1);
-		seekBars[1] = (SeekBar) findViewById(R.id.speedM2);
-		seekBars[2] = (SeekBar) findViewById(R.id.speedM3);
 		
 		for (int i = 0; i < speedMotors.length; i++) {
 			speedMotors[i] = seekBars[i].getProgress();
@@ -177,14 +250,10 @@ public class MainActivity extends Activity implements SensorEventListener {
 				
 				@Override
 				public void onStopTrackingTouch(SeekBar seekBar) {
-					// TODO Auto-generated method stub
-					
 				}
 				
 				@Override
 				public void onStartTrackingTouch(SeekBar seekBar) {
-					// TODO Auto-generated method stub
-					
 				}
 				
 				@Override
@@ -193,12 +262,15 @@ public class MainActivity extends Activity implements SensorEventListener {
 					// TODO Auto-generated method stub
 					if (seekBar == seekBars[0]) {
 						speedMotors[0] = progress;
+						tvShowSpeeds[0].setText(progress + " %");
 					}
 					if (seekBar == seekBars[1]) {
 						speedMotors[1] = progress;
+						tvShowSpeeds[1].setText(progress + " %");
 					}
 					if (seekBar == seekBars[2]) {
 						speedMotors[2] = progress;
+						tvShowSpeeds[2].setText(progress + " %");
 					}
 					
 					Log.d("SpeedBars", "Speed 1, 2, 3: " + speedMotors[0] + " " + speedMotors[1] + " " + speedMotors[2]);
@@ -491,6 +563,56 @@ public class MainActivity extends Activity implements SensorEventListener {
 				}
 			}
 		}
+	}
+	
+	public void drawVerticalLine () {
+		
+		//Good default powers: 3,10,6
+		drawPower[0] = (byte) (speedMotors[0]);
+		drawPower[1] = (byte) (speedMotors[1]);
+		
+		mNXTTalker.motor(NXTTalker.MOTOR1, drawPower[0], mRegulateSpeed, mSynchronizeMotors);
+		mNXTTalker.motor(NXTTalker.MOTOR2, drawPower[1], mRegulateSpeed, mSynchronizeMotors);
+	}
+	
+	public void drawHorizontalLine () {
+		
+		//Good defaul powers: 3,2,6 %
+		drawPower[0] = (byte) (speedMotors[0]);
+		drawPower[1] = (byte) ((-1) * speedMotors[1]);
+		drawPower[2] = (byte) (speedMotors[2]);
+				
+		mNXTTalker.motor(NXTTalker.MOTOR1, drawPower[0], mRegulateSpeed, mSynchronizeMotors);
+		mNXTTalker.motor(NXTTalker.MOTOR2, drawPower[1], mRegulateSpeed, mSynchronizeMotors);
+		mNXTTalker.motor(NXTTalker.MOTOR3, drawPower[2], mRegulateSpeed, mSynchronizeMotors);
+	}
+	
+	public void drawVerticalLine2 () {
+		//Good default powers: 3,10,6
+		drawPower[0] = (byte) ((-1) * speedMotors[0]);
+		drawPower[1] = (byte) ((-1) * speedMotors[1]);
+		
+		mNXTTalker.motor(NXTTalker.MOTOR1, drawPower[0], mRegulateSpeed, mSynchronizeMotors);
+		mNXTTalker.motor(NXTTalker.MOTOR2, drawPower[1], mRegulateSpeed, mSynchronizeMotors);
+	}
+	
+	public void drawHorizontalLine2 () {
+		
+		//Good defaul powers: 3,2,6 %
+		drawPower[0] = (byte) ((-1) * speedMotors[0]);
+		drawPower[1] = (byte) (speedMotors[1]);
+		drawPower[2] = (byte) ((-1) * speedMotors[2]);
+				
+		mNXTTalker.motor(NXTTalker.MOTOR1, drawPower[0], mRegulateSpeed, mSynchronizeMotors);
+		mNXTTalker.motor(NXTTalker.MOTOR2, drawPower[1], mRegulateSpeed, mSynchronizeMotors);
+		mNXTTalker.motor(NXTTalker.MOTOR3, drawPower[2], mRegulateSpeed, mSynchronizeMotors);
+	}
+	
+	public void stopAllMotors () {
+		
+		mNXTTalker.motor(NXTTalker.MOTOR1, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
+		mNXTTalker.motor(NXTTalker.MOTOR2, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
+		mNXTTalker.motor(NXTTalker.MOTOR3, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
 	}
 	
 	
