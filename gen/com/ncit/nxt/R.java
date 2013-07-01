@@ -24,7 +24,8 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f080017;
+        public static final int action_settings=0x7f080018;
+        public static final int bCalibration=0x7f080017;
         public static final int bSwitchDrawMode=0x7f080016;
         public static final int bVerticalLine=0x7f080012;
         public static final int button_scan=0x7f080005;

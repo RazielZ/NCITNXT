@@ -165,4 +165,13 @@
         android:layout_toLeftOf="@+id/bVerticalLine"
         android:text="DMode" />
 
+    <Button
+        android:id="@+id/bCalibration"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/m1b2"
+        android:layout_alignRight="@+id/m1b1"
+        android:text="Clb" />
+
 </RelativeLayout>

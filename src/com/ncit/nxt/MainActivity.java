@@ -52,13 +52,15 @@ public class MainActivity extends Activity implements SensorEventListener {
 	private Button testConnectButton;
 	private Button switchButton;
 	
+	private Button bCalibration;
+	
 	//Buton selectare mod scriere: 0 - Vertical, 1 - Orizontal etc.
 	private Button bSwitchDrawMode;
 	
 	//Variabila pentru modul de desenare selectat
 	private int drawMode = 0;
 	//Variabila pentru nr total de moduri
-	private int noDrawingModes = 4;
+	private int noDrawingModes = 5;
 	
 	//Status conexiune
 	private TextView testStatusTextView; 
@@ -114,6 +116,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 		setupUI();
 
 		mNXTTalker = new NXTTalker(mHandler);
+		
 	}
 
 	@Override
@@ -134,10 +137,20 @@ public class MainActivity extends Activity implements SensorEventListener {
 				}
 			}
 		}
-
+		
 	}
 
 	private void setupUI() {
+		
+		//Calibration Button
+		bCalibration = (Button) findViewById (R.id.bCalibration);
+		bCalibration.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				calibration();
+			}
+		});
 		
 		//SeekBars:
 		seekBars[0] = (SeekBar) findViewById(R.id.speedM1);
@@ -150,15 +163,16 @@ public class MainActivity extends Activity implements SensorEventListener {
 			
 			@Override
 			public void onClick(View v) {
+				
 				drawMode = (drawMode + 1) % noDrawingModes;
-				//Linie verticala stanga-dreapta
+				//Linie verticala sus-jos
 				if (drawMode == 0) {
 					bVerticalLine.setText("VLine");
-					speedMotors[0] = 3;
-					speedMotors[1] = 10;
+					speedMotors[0] = 5;
+					speedMotors[1] = 8;
 					speedMotors[2] = 6;
-					seekBars[0].setProgress(3);
-					seekBars[1].setProgress(10);
+					seekBars[0].setProgress(5);
+					seekBars[1].setProgress(8);
 					seekBars[2].setProgress(6);
 				}
 				//Linie orizontala stanga-dreapta
@@ -171,25 +185,29 @@ public class MainActivity extends Activity implements SensorEventListener {
 					seekBars[1].setProgress(2);
 					seekBars[2].setProgress(6);
 				}
-				//Linie verticala dreapta-stanga
+				//Linie verticala jos-sus
 				if (drawMode == 2) {
 					bVerticalLine.setText("-VLine");
-					speedMotors[0] = 3;
-					speedMotors[1] = 10;
+					speedMotors[0] = 4;
+					speedMotors[1] = 8;
 					speedMotors[2] = 6;
-					seekBars[0].setProgress(3);
-					seekBars[1].setProgress(10);
+					seekBars[0].setProgress(4);
+					seekBars[1].setProgress(8);
 					seekBars[2].setProgress(6);
 				}
 				//Linie orizontala dreapta-stanga
 				if (drawMode == 3) {
-					bVerticalLine.setText("HLine");
-					speedMotors[0] = 3;
-					speedMotors[1] = 2;
-					speedMotors[2] = 6;
-					seekBars[0].setProgress(3);
-					seekBars[1].setProgress(2);
-					seekBars[2].setProgress(6);
+					bVerticalLine.setText("-HLine");
+					speedMotors[0] = 2;
+					speedMotors[1] = 0;
+					speedMotors[2] = 5;
+					seekBars[0].setProgress(2);
+					seekBars[1].setProgress(0);
+					seekBars[2].setProgress(5);
+				}
+				//Deseneaza 7
+				if (drawMode == 4) {
+					bVerticalLine.setText("7");
 				}
 			}
 		});
@@ -201,49 +219,102 @@ public class MainActivity extends Activity implements SensorEventListener {
 		
 		//Buton pentru desenare linie verticala
 		bVerticalLine = (Button) findViewById(R.id.bVerticalLine);		
-		bVerticalLine.setOnTouchListener(new OnTouchListener() {
+		bVerticalLine.setOnClickListener(new OnClickListener() {
 			
 			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				
-				new Thread(new Runnable() {
+			public void onClick(View v) {
+				Log.d("Case", "OnTouch");
+				Thread control = new Thread(new Runnable() {
 					int sleepTime = 500;
 					@Override
 					public void run() {
 						
-						if (drawMode == 0) {
-							drawVerticalLine();
-							sleepTime = 500;
-						} else {
-							if (drawMode == 1) {
-								drawHorizontalLine();
-								sleepTime = 400;
-							} else {
-								if (drawMode == 2) {
-									drawVerticalLine2(); //adica in sens invers
-								} else {
-									drawHorizontalLine2(); // adica in sens invers
-								}
-							}
-						}
+						switch (drawMode) {
 						
-						try {
-							Thread.sleep(sleepTime);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}						
-						stopAllMotors();
+						case 0: 
+							Log.d ("Case", "Case 0");
+							drawVerticalLine();
+							try {
+								Thread.sleep(sleepTime);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+							stopAllMotors();
+							break;
+								
+						case 1:
+							Log.d ("Case", "Case 1");
+							drawHorizontalLine();
+							try {
+								Thread.sleep(sleepTime);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+							stopAllMotors();
+							break;
+						
+						case 2:
+							Log.d ("Case", "Case 2");
+							drawVerticalLine2(); //adica in sens invers
+							try {
+								Thread.sleep(sleepTime);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+							stopAllMotors();
+							break;
+							
+						case 3:
+							Log.d ("Case", "Case 3");
+							drawHorizontalLine2(); // adica in sens invers
+							try {
+								Thread.sleep(sleepTime);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+							stopAllMotors();
+							break;
+							
+						case 4: //Deseneaza cifra 7
+							Log.d ("Case", "Case 4");
+							speedMotors[0] = 4;
+							speedMotors[1] = 8;
+							speedMotors[2] = 6;
+							drawVerticalLine2 ();
+							
+							try {
+								Thread.sleep(sleepTime);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+							speedMotors[0] = 2;
+							speedMotors[1] = 0;
+							speedMotors[2] = 5;
+							drawHorizontalLine2 ();
+							try {
+								Thread.sleep(sleepTime);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+							stopAllMotors();
+							break;
+							
+						default: stopAllMotors(); break;
+						}
 					}
-				}).start();
-				
-
-				return true;
+				});
+				control.start();
+				try {
+					control.join();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		});
 		
-		for (int i = 0; i < speedMotors.length; i++) {
-			speedMotors[i] = seekBars[i].getProgress();
-		}
+//		for (int i = 0; i < speedMotors.length; i++) {
+//			speedMotors[i] = seekBars[i].getProgress();
+//		}
 		
 		for (SeekBar s : seekBars) {
 			s.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
@@ -259,12 +330,12 @@ public class MainActivity extends Activity implements SensorEventListener {
 				@Override
 				public void onProgressChanged(SeekBar seekBar, int progress,
 						boolean fromUser) {
-					// TODO Auto-generated method stub
 					if (seekBar == seekBars[0]) {
 						speedMotors[0] = progress;
 						tvShowSpeeds[0].setText(progress + " %");
 					}
 					if (seekBar == seekBars[1]) {
+						Log.d ("Progress", "sM= " + speedMotors[1] + " progress: " + progress);
 						speedMotors[1] = progress;
 						tvShowSpeeds[1].setText(progress + " %");
 					}
@@ -290,15 +361,20 @@ public class MainActivity extends Activity implements SensorEventListener {
 		testStatusTextView.setText(stateText+" (Button Mode)");
 		for (int i = 0; i<motorButtons.size(); i++) {
 			switch (i) {
-			case 0: motorButtons.get(i).setOnTouchListener(new MotorButtonListener(0,true,1.0d,15)); break;
-			case 1: motorButtons.get(i).setOnTouchListener(new MotorButtonListener(0,false,1.0d,15)); break;
-			case 2: motorButtons.get(i).setOnTouchListener(new MotorButtonListener(1,true,1.0d,15)); break;
-			case 3: motorButtons.get(i).setOnTouchListener(new MotorButtonListener(1,false,1.0d,15)); break;
-			case 4: motorButtons.get(i).setOnTouchListener(new MotorButtonListener(2,true,1.0d,8)); break;
-			case 5: motorButtons.get(i).setOnTouchListener(new MotorButtonListener(2,false,1.0d,8)); break;
+			case 0: 
+				motorButtons.get(i).setOnTouchListener(new MotorButtonListener(0,true,1.0d,15)); break;
+			case 1: 
+				motorButtons.get(i).setOnTouchListener(new MotorButtonListener(0,false,1.0d,15)); break;
+			case 2: 
+				motorButtons.get(i).setOnTouchListener(new MotorButtonListener(1,true,1.0d,15)); break;
+			case 3: 
+				motorButtons.get(i).setOnTouchListener(new MotorButtonListener(1,false,1.0d,15)); break;
+			case 4: 
+				motorButtons.get(i).setOnTouchListener(new MotorButtonListener(2,true,1.0d,8)); break;
+			case 5: 
+				motorButtons.get(i).setOnTouchListener(new MotorButtonListener(2,false,1.0d,8)); break;
 			default: motorButtons.get(i).setOnTouchListener(new MotorButtonListener(i/2,false,1.0d,15)); break;
 			}
-			//	motorButtons.get(i).setOnTouchListener(new MotorButtonListener((short)(i%3),dir,1.0d,50));
 		}
 
 		testConnectButton = (Button) findViewById(R.id.testconnectbutton);
@@ -314,6 +390,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 			@Override
 			public void onClick(View v) {
+				
 				sensorMode = !sensorMode;
 				mNXTTalker.motor(mNXTTalker.MOTOR1, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
 				mNXTTalker.motor(mNXTTalker.MOTOR2, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
@@ -416,12 +493,12 @@ public class MainActivity extends Activity implements SensorEventListener {
 	private class MotorButtonListener implements OnTouchListener {
 
 		private double motormod;
-		private int power;
+		private float power = 1;
 		private byte motorB;
 
-		public MotorButtonListener(int motor, boolean dir, double powerMod, int power) {
+		public MotorButtonListener(int motor, boolean dir, double powerMod, int ppower) {
 			motormod = powerMod;
-			this.power = power;
+			this.power = ppower;
 			if (!dir){
 				if (motor!=0) {
 					this.power *= -1;
@@ -431,7 +508,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 					this.power *= -1;
 				}
 			}
-			Log.d("PWR", "Power: "+power);
+			Log.d("power1", "PowerInitial: "+ppower);
 			switch (motor){ 
 				case 0: motorB = NXTTalker.MOTOR1; break;
 				case 1: motorB = NXTTalker.MOTOR2; break;
@@ -442,21 +519,28 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 		@Override
 		public boolean onTouch(View v, MotionEvent event) {
+			float signum = (float) power;
 			int action = event.getAction();
 			
 			switch (motorB) {
 			
-				case NXTTalker.MOTOR1: Log.d("SIGN", "SIGN0= " + Math.round(Math.signum(power)));
-										power = speedMotors[0] * Math.round(Math.signum(power)); 
-										Log.d("power0", "pw0= " + power + " " + speedMotors[0]); break;
-				
-				case NXTTalker.MOTOR2: power = speedMotors[1] * (int) Math.signum(power); 
+			case NXTTalker.MOTOR1: 
+				Log.d("power1", "PowerSignum0: " + (int) Math.signum(signum));
+				power = speedMotors[0] * (int) Math.signum(signum); 
+				Log.d("power1", "pw0= " + power + " " + speedMotors[0]); break;
+
+			case NXTTalker.MOTOR2: 
+				Log.d("power1", "PowerSignum1: " + (int) Math.signum(signum) + " " + signum);
+				power = speedMotors[1] * (int) Math.signum(signum); 
 				Log.d("power1", "pw1= " + power + " " + speedMotors[1]); break;
-				
-				case NXTTalker.MOTOR3: power = speedMotors[2] * (int) Math.signum(power); 
-				Log.d("power2", "pw2= " + power + " " + speedMotors[2]); break;
-				
-				default: power = speedMotors[0] * (int) Math.signum(power); break;
+
+			case NXTTalker.MOTOR3: 
+				Log.d("power1", "PowerSignum2: " + (int) Math.signum(signum));
+				power = speedMotors[2] * (int) Math.signum(signum); 
+				Log.d("power1", "pw2= " + power + " " + speedMotors[2]); break;
+
+			default: 
+				power = speedMotors[0] * Math.round(Math.signum(signum)); break;
 			}
 			
 			if (!sensorMode) {
@@ -615,6 +699,24 @@ public class MainActivity extends Activity implements SensorEventListener {
 		mNXTTalker.motor(NXTTalker.MOTOR3, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
 	}
 	
+	public void calibration () {
+		new Thread(new Runnable() {
+			int sleepTime = 1340;
+			@Override
+			public void run() {
+				
+				drawPower[1] = (byte) -20;
+				mNXTTalker.motor(NXTTalker.MOTOR2, drawPower[1], mRegulateSpeed, mSynchronizeMotors);
+				
+				try {
+					Thread.sleep(sleepTime);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}						
+				stopAllMotors();
+			}
+		}).start();
+	}
 	
 }
 
