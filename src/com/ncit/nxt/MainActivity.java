@@ -60,7 +60,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 	//Variabila pentru modul de desenare selectat
 	private int drawMode = 0;
 	//Variabila pentru nr total de moduri
-	private int noDrawingModes = 5;
+	private int noDrawingModes = 7;
 	
 	//Status conexiune
 	private TextView testStatusTextView; 
@@ -198,7 +198,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 				//Linie orizontala dreapta-stanga
 				if (drawMode == 3) {
 					bVerticalLine.setText("-HLine");
-					speedMotors[0] = 2;
+					speedMotors[0] = 0;
 					speedMotors[1] = 0;
 					speedMotors[2] = 5;
 					seekBars[0].setProgress(2);
@@ -208,6 +208,14 @@ public class MainActivity extends Activity implements SensorEventListener {
 				//Deseneaza 7
 				if (drawMode == 4) {
 					bVerticalLine.setText("7");
+				}
+				//Deseneaza 1
+				if (drawMode == 5) {
+					bVerticalLine.setText("1");
+				}
+				//Deseneaza 2
+				if (drawMode == 6) {
+					bVerticalLine.setText("2");
 				}
 			}
 		});
@@ -315,6 +323,13 @@ public class MainActivity extends Activity implements SensorEventListener {
 							}
 							stopAllMotors();
 							break;
+							
+						//draw 1
+						case 5:
+							drawOne ();
+							
+						case 6:
+							drawTwo();
 							
 						default: stopAllMotors(); break;
 						}
@@ -670,7 +685,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 	
 	public void drawHorizontalLine2 () {
 		
-		//Good defaul powers: 3,2,6 %
+		//Good default powers: 3,2,6 %
 		drawPower[0] = (byte) ((-1) * speedMotors[0]);
 		drawPower[1] = (byte) (speedMotors[1]);
 		drawPower[2] = (byte) ((-1) * speedMotors[2]);
@@ -690,6 +705,12 @@ public class MainActivity extends Activity implements SensorEventListener {
 	public void pennUp () {
 		speedMotors[1] = 30;
 		mNXTTalker.motor(NXTTalker.MOTOR2, (byte) speedMotors[1], mRegulateSpeed, mSynchronizeMotors);
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		stopAllMotors();
 	}
 	
 	public void calibration () {
@@ -709,6 +730,77 @@ public class MainActivity extends Activity implements SensorEventListener {
 				stopAllMotors();
 			}
 		}).start();
+	}
+	
+	public void drawOne () {
+		Thread draw = new Thread (new Runnable() {
+			
+			@Override
+			public void run() {
+				drawPower[0] = (byte) (-1 * 5);
+				drawPower[1] = (byte) (-1 * 16);
+				
+				mNXTTalker.motor(NXTTalker.MOTOR1, drawPower[0], mRegulateSpeed, mSynchronizeMotors);
+				mNXTTalker.motor(NXTTalker.MOTOR2, drawPower[1], mRegulateSpeed, mSynchronizeMotors);
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				drawPower[0] = (byte) (8);
+				drawPower[1] = (byte) (5);
+				drawPower[2] = (byte) (-10);
+				mNXTTalker.motor(NXTTalker.MOTOR1, drawPower[0], mRegulateSpeed, mSynchronizeMotors);
+				mNXTTalker.motor(NXTTalker.MOTOR2, drawPower[1], mRegulateSpeed, mSynchronizeMotors);
+				mNXTTalker.motor(NXTTalker.MOTOR3, drawPower[2], mRegulateSpeed, mSynchronizeMotors);
+				try {
+					Thread.sleep(300);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				stopAllMotors();
+				pennUp();
+			}
+			
+		});
+		draw.start();
+		try {
+			draw.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void drawTwo () {
+
+		Thread draw = new Thread (new Runnable() {
+			
+			@Override
+			public void run() {
+				speedMotors[0] = 0;
+				speedMotors[1] = 1;
+				speedMotors[2] = 3;
+				mNXTTalker.motor(NXTTalker.MOTOR1, drawPower[0], mRegulateSpeed, mSynchronizeMotors);
+				mNXTTalker.motor(NXTTalker.MOTOR2, drawPower[1], mRegulateSpeed, mSynchronizeMotors);
+				mNXTTalker.motor(NXTTalker.MOTOR3, drawPower[2], mRegulateSpeed, mSynchronizeMotors);
+				try {
+					Thread.sleep(400);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				speedMotors[0] = -1;
+				speedMotors[1] = 0;
+				speedMotors[2] = 6;
+				drawHorizontalLine2 ();
+				try {
+					Thread.sleep(400);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				stopAllMotors();
+			}
+		});
+		draw.start();
 	}
 	
 }
