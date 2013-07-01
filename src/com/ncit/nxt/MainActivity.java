@@ -283,7 +283,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 							drawVerticalLine2 ();
 							
 							try {
-								Thread.sleep(sleepTime);
+								Thread.sleep(800);
 							} catch (InterruptedException e) {
 								e.printStackTrace();
 							}
@@ -293,6 +293,23 @@ public class MainActivity extends Activity implements SensorEventListener {
 							drawHorizontalLine2 ();
 							try {
 								Thread.sleep(sleepTime);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+							stopAllMotors();
+							speedMotors[0] = 4;
+							speedMotors[1] = 1;
+							speedMotors[2] = 1;
+							
+							drawVerticalLine ();
+							try {
+								Thread.sleep(500);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+							pennUp ();
+							try {
+								Thread.sleep(400);
 							} catch (InterruptedException e) {
 								e.printStackTrace();
 							}
@@ -312,10 +329,11 @@ public class MainActivity extends Activity implements SensorEventListener {
 			}
 		});
 		
-//		for (int i = 0; i < speedMotors.length; i++) {
-//			speedMotors[i] = seekBars[i].getProgress();
-//		}
+		for (int i = 0; i < speedMotors.length; i++) {
+			speedMotors[i] = seekBars[i].getProgress();
+		}
 		
+		//Adaugare eveniment seekBar listener
 		for (SeekBar s : seekBars) {
 			s.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 				
@@ -359,21 +377,22 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 		testStatusTextView = (TextView) findViewById(R.id.testtext);
 		testStatusTextView.setText(stateText+" (Button Mode)");
-		for (int i = 0; i<motorButtons.size(); i++) {
+		for (int i = 0; i<6; i++) {
 			switch (i) {
 			case 0: 
-				motorButtons.get(i).setOnTouchListener(new MotorButtonListener(0,true,1.0d,15)); break;
+				motorButtons.get(i).setOnTouchListener(new MotorButtonListener(0,-1,1.0d,15)); break;
 			case 1: 
-				motorButtons.get(i).setOnTouchListener(new MotorButtonListener(0,false,1.0d,15)); break;
+				motorButtons.get(i).setOnTouchListener(new MotorButtonListener(0,1,1.0d,15)); break;
 			case 2: 
-				motorButtons.get(i).setOnTouchListener(new MotorButtonListener(1,true,1.0d,15)); break;
+				motorButtons.get(i).setOnTouchListener(new MotorButtonListener(1,1,1.0d,15)); break;
 			case 3: 
-				motorButtons.get(i).setOnTouchListener(new MotorButtonListener(1,false,1.0d,15)); break;
+				motorButtons.get(i).setOnTouchListener(new MotorButtonListener(1,-1,1.0d,15)); break;
 			case 4: 
-				motorButtons.get(i).setOnTouchListener(new MotorButtonListener(2,true,1.0d,8)); break;
+				motorButtons.get(i).setOnTouchListener(new MotorButtonListener(2,1,1.0d,8)); break;
 			case 5: 
-				motorButtons.get(i).setOnTouchListener(new MotorButtonListener(2,false,1.0d,8)); break;
-			default: motorButtons.get(i).setOnTouchListener(new MotorButtonListener(i/2,false,1.0d,15)); break;
+				motorButtons.get(i).setOnTouchListener(new MotorButtonListener(2,-1,1.0d,8)); break;
+			default: 
+				motorButtons.get(i).setOnTouchListener(new MotorButtonListener(i/2,1,1.0d,15)); break;
 			}
 		}
 
@@ -438,8 +457,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 		case NXTTalker.STATE_NONE:
 			stateText = "Not connected";
 			color = 0xffff0000;
-			//	            mConnectButton.setVisibility(View.VISIBLE);
-			//	            mDisconnectButton.setVisibility(View.GONE);
 			setProgressBarIndeterminateVisibility(false);
 			if (mWakeLock.isHeld()) {
 				mWakeLock.release();
@@ -448,8 +465,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 		case NXTTalker.STATE_CONNECTING:
 			stateText = "Connecting...";
 			color = 0xffffff00;
-			//	            mConnectButton.setVisibility(View.GONE);
-			//	            mDisconnectButton.setVisibility(View.GONE);
 			setProgressBarIndeterminateVisibility(true);
 			if (!mWakeLock.isHeld()) {
 				mWakeLock.acquire();
@@ -458,8 +473,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 		case NXTTalker.STATE_CONNECTED:
 			stateText = "Connected";
 			color = 0xff00ff00;
-			//	            mConnectButton.setVisibility(View.GONE);
-			//	            mDisconnectButton.setVisibility(View.VISIBLE);
 			setProgressBarIndeterminateVisibility(false);
 			if (!mWakeLock.isHeld()) {
 				mWakeLock.acquire();
@@ -493,63 +506,38 @@ public class MainActivity extends Activity implements SensorEventListener {
 	private class MotorButtonListener implements OnTouchListener {
 
 		private double motormod;
-		private float power = 1;
+		private int power;
+		private int sign;
 		private byte motorB;
+		private int motorBi;
 
-		public MotorButtonListener(int motor, boolean dir, double powerMod, int ppower) {
+		public MotorButtonListener(int motor, int dir, double powerMod, int ppower) {
 			motormod = powerMod;
-			this.power = ppower;
-			if (!dir){
-				if (motor!=0) {
-					this.power *= -1;
-				}
-			} else {
-				if (motor==0) {
-					this.power *= -1;
-				}
-			}
+			power = dir;
+			sign = dir;
 			Log.d("power1", "PowerInitial: "+ppower);
 			switch (motor){ 
-				case 0: motorB = NXTTalker.MOTOR1; break;
-				case 1: motorB = NXTTalker.MOTOR2; break;
-				case 2: motorB = NXTTalker.MOTOR3; break;
+				case 0: motorB = NXTTalker.MOTOR1; motorBi = 0; break;
+				case 1: motorB = NXTTalker.MOTOR2; motorBi = 1; break;
+				case 2: motorB = NXTTalker.MOTOR3; motorBi = 2; break;
 				default: motorB = NXTTalker.MOTOR1; break;
 			}
 		}
 
 		@Override
 		public boolean onTouch(View v, MotionEvent event) {
-			float signum = (float) power;
 			int action = event.getAction();
 			
-			switch (motorB) {
-			
-			case NXTTalker.MOTOR1: 
-				Log.d("power1", "PowerSignum0: " + (int) Math.signum(signum));
-				power = speedMotors[0] * (int) Math.signum(signum); 
-				Log.d("power1", "pw0= " + power + " " + speedMotors[0]); break;
-
-			case NXTTalker.MOTOR2: 
-				Log.d("power1", "PowerSignum1: " + (int) Math.signum(signum) + " " + signum);
-				power = speedMotors[1] * (int) Math.signum(signum); 
-				Log.d("power1", "pw1= " + power + " " + speedMotors[1]); break;
-
-			case NXTTalker.MOTOR3: 
-				Log.d("power1", "PowerSignum2: " + (int) Math.signum(signum));
-				power = speedMotors[2] * (int) Math.signum(signum); 
-				Log.d("power1", "pw2= " + power + " " + speedMotors[2]); break;
-
-			default: 
-				power = speedMotors[0] * Math.round(Math.signum(signum)); break;
-			}
-			
+			Log.d ("power1", "speedMotors: " + speedMotors[0] + " " + speedMotors[1] + " " + speedMotors[2]);
 			if (!sensorMode) {
 				if (action == MotionEvent.ACTION_DOWN) {
-					byte fPower = (byte) (power*motormod);
+					
+					byte fPower = (byte) (speedMotors[motorBi] * sign);
 					Log.d("MMOD", "Motormod: "+motormod);
 					Log.d("cPWR", "Current Power: "+power);
 					Log.d("fPWR", "Final Power: "+fPower);
 					
+					Log.d ("power1", "action= motor: " + motorB + " fpower: " + fPower);
 					mNXTTalker.motor(motorB, fPower, mRegulateSpeed, mSynchronizeMotors);
 				} else if ((action == MotionEvent.ACTION_UP) || (action == MotionEvent.ACTION_CANCEL)) {
 					mNXTTalker.motor(motorB, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
@@ -697,6 +685,11 @@ public class MainActivity extends Activity implements SensorEventListener {
 		mNXTTalker.motor(NXTTalker.MOTOR1, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
 		mNXTTalker.motor(NXTTalker.MOTOR2, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
 		mNXTTalker.motor(NXTTalker.MOTOR3, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
+	}
+	
+	public void pennUp () {
+		speedMotors[1] = 30;
+		mNXTTalker.motor(NXTTalker.MOTOR2, (byte) speedMotors[1], mRegulateSpeed, mSynchronizeMotors);
 	}
 	
 	public void calibration () {
