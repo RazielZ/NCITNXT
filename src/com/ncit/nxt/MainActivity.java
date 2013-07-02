@@ -60,7 +60,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 	//Variabila pentru modul de desenare selectat
 	private int drawMode = 0;
 	//Variabila pentru nr total de moduri
-	private int noDrawingModes = 7;
+	private int noDrawingModes = 10;
 	
 	//Status conexiune
 	private TextView testStatusTextView; 
@@ -217,6 +217,15 @@ public class MainActivity extends Activity implements SensorEventListener {
 				if (drawMode == 6) {
 					bVerticalLine.setText("2");
 				}
+				if (drawMode == 7) {
+					bVerticalLine.setText("3");
+				}
+				if (drawMode == 8) {
+					bVerticalLine.setText("4");
+				}
+				if (drawMode == 9) {
+					bVerticalLine.setText("5");
+				}
 			}
 		});
 		
@@ -284,52 +293,29 @@ public class MainActivity extends Activity implements SensorEventListener {
 							break;
 							
 						case 4: //Deseneaza cifra 7
-							Log.d ("Case", "Case 4");
-							speedMotors[0] = 4;
-							speedMotors[1] = 8;
-							speedMotors[2] = 6;
-							drawVerticalLine2 ();
-							
-							try {
-								Thread.sleep(800);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-							speedMotors[0] = 2;
-							speedMotors[1] = 0;
-							speedMotors[2] = 5;
-							drawHorizontalLine2 ();
-							try {
-								Thread.sleep(sleepTime);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-							stopAllMotors();
-							speedMotors[0] = 4;
-							speedMotors[1] = 1;
-							speedMotors[2] = 1;
-							
-							drawVerticalLine ();
-							try {
-								Thread.sleep(500);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-							pennUp ();
-							try {
-								Thread.sleep(400);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-							stopAllMotors();
+							drawSeven();
 							break;
 							
 						//draw 1
 						case 5:
 							drawOne ();
+							break;
 							
 						case 6:
 							drawTwo();
+							break;
+						
+						case 7:
+							drawThree();
+							break;
+							
+						case 8:
+							drawFour();
+							break;
+							
+						case 9:
+							drawFive();
+							break;
 							
 						default: stopAllMotors(); break;
 						}
@@ -711,6 +697,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 			e.printStackTrace();
 		}
 		stopAllMotors();
+		speedMotors[1] = 10;
 	}
 	
 	public void calibration () {
@@ -737,29 +724,33 @@ public class MainActivity extends Activity implements SensorEventListener {
 			
 			@Override
 			public void run() {
-				drawPower[0] = (byte) (-1 * 5);
-				drawPower[1] = (byte) (-1 * 16);
-				
-				mNXTTalker.motor(NXTTalker.MOTOR1, drawPower[0], mRegulateSpeed, mSynchronizeMotors);
-				mNXTTalker.motor(NXTTalker.MOTOR2, drawPower[1], mRegulateSpeed, mSynchronizeMotors);
+				//Up
+				activateAllMotors (-4, -8, 0);
 				try {
-					Thread.sleep(500);
+					Thread.sleep(600);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				drawPower[0] = (byte) (8);
-				drawPower[1] = (byte) (5);
-				drawPower[2] = (byte) (-10);
-				mNXTTalker.motor(NXTTalker.MOTOR1, drawPower[0], mRegulateSpeed, mSynchronizeMotors);
-				mNXTTalker.motor(NXTTalker.MOTOR2, drawPower[1], mRegulateSpeed, mSynchronizeMotors);
-				mNXTTalker.motor(NXTTalker.MOTOR3, drawPower[2], mRegulateSpeed, mSynchronizeMotors);
+				//Left-Down (Diagonal)
+				activateAllMotors (8, 5, -10);
 				try {
 					Thread.sleep(300);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 				stopAllMotors();
-				pennUp();
+				try {
+					Thread.sleep(400);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}		
+				activateAllMotors(-20, 30, 0);
+				try {
+					Thread.sleep(400);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}		
+				stopAllMotors();
 			}
 			
 		});
@@ -771,36 +762,306 @@ public class MainActivity extends Activity implements SensorEventListener {
 		}
 	}
 	
+	public void activateAllMotors (int speedMotor0, int speedMotor1, int speedMotor2) {
+		
+		drawPower[0] = (byte) speedMotor0;
+		drawPower[1] = (byte) speedMotor1;
+		drawPower[2] = (byte) speedMotor2;
+		
+		mNXTTalker.motor(NXTTalker.MOTOR1, drawPower[0], mRegulateSpeed, mSynchronizeMotors);
+		mNXTTalker.motor(NXTTalker.MOTOR2, drawPower[1], mRegulateSpeed, mSynchronizeMotors);
+		mNXTTalker.motor(NXTTalker.MOTOR3, drawPower[2], mRegulateSpeed, mSynchronizeMotors);
+	}
+	
 	public void drawTwo () {
 
 		Thread draw = new Thread (new Runnable() {
 			
 			@Override
 			public void run() {
-				speedMotors[0] = 0;
-				speedMotors[1] = 1;
-				speedMotors[2] = 3;
-				mNXTTalker.motor(NXTTalker.MOTOR1, drawPower[0], mRegulateSpeed, mSynchronizeMotors);
-				mNXTTalker.motor(NXTTalker.MOTOR2, drawPower[1], mRegulateSpeed, mSynchronizeMotors);
-				mNXTTalker.motor(NXTTalker.MOTOR3, drawPower[2], mRegulateSpeed, mSynchronizeMotors);
+
+				//Left
+				activateAllMotors (-1, 0, -5);
 				try {
-					Thread.sleep(400);
+					Thread.sleep(500);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				speedMotors[0] = -1;
-				speedMotors[1] = 0;
-				speedMotors[2] = 6;
-				drawHorizontalLine2 ();
+				//Up
+				activateAllMotors (-3, -17, 0);
+				try {
+					Thread.sleep(250);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				stopAllMotors();
+				//Right
+				activateAllMotors (-2, 5, 8);
 				try {
 					Thread.sleep(400);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 				stopAllMotors();
+				try {
+					Thread.sleep(300);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				//Up
+				activateAllMotors (-5, -10, 0);
+				try {
+					Thread.sleep(350);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				stopAllMotors();
+				//Left
+				activateAllMotors (0, 0, -7);
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				stopAllMotors();
+				pennUp();
 			}
 		});
 		draw.start();
+	}
+	
+	public void drawSeven () {
+		Thread draw = new Thread (new Runnable() {
+		
+			@Override
+			public void run() {
+				//Up
+				activateAllMotors (-4, -8, 0);
+				
+				try {
+					Thread.sleep(600);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				//Left
+				activateAllMotors(-2, 0, -5);
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				stopAllMotors();
+				//Down
+				activateAllMotors(4, 1, 0);
+				try {
+					Thread.sleep(300);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				stopAllMotors();
+				try {
+					Thread.sleep(300);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				pennUp ();
+
+				
+			}
+		});
+		draw.start();
+		try {
+			draw.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void drawThree () {
+		Thread draw = new Thread (new Runnable() {
+			
+			@Override
+			public void run() {
+				//Right
+				activateAllMotors (0, 0, 8);
+				try {
+					Thread.sleep(400);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				stopAllMotors();
+				try {
+					Thread.sleep(300);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				//Up
+				activateAllMotors (-5, -10, 0);
+				try {
+					Thread.sleep(450);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				stopAllMotors();
+				//Left
+				activateAllMotors (0, 0, -7);
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				stopAllMotors();
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				//Right
+				activateAllMotors (0, 0, 7);
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				stopAllMotors();
+				//Up
+				activateAllMotors (-5, -10, 0);
+				try {
+					Thread.sleep(450);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				stopAllMotors();
+				
+				//Left
+				activateAllMotors (0, 0, -7);
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				stopAllMotors();
+				pennUp();
+				
+			}
+		});
+		draw.start();
+		try {
+			draw.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void drawFour () {
+		Thread draw = new Thread (new Runnable() {
+			
+			@Override
+			public void run() {
+				//Up
+				activateAllMotors (-5, -10, 0);
+				try {
+					Thread.sleep(450);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				stopAllMotors();
+				//Up
+				activateAllMotors (-5, -10, 0);
+				try {
+					Thread.sleep(350);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				stopAllMotors();
+				//Down
+				activateAllMotors (5, 12, 0);
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				stopAllMotors();
+				//Left
+				activateAllMotors (0, 0, -7);
+				try {
+					Thread.sleep(400);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				stopAllMotors();
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				//Up
+				activateAllMotors (-5, -10, 0);
+				try {
+					Thread.sleep(450);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				stopAllMotors();
+				
+				pennUp();
+				
+			}
+		});
+		draw.start();
+		try {
+			draw.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void drawFive () {
+		
+		Thread draw = new Thread (new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					//Right
+					activateAllMotors (0, 0, 7);
+					Thread.sleep(400);
+					stopAllMotors();
+					
+					//Up
+					activateAllMotors (-5, -10, 0);
+					Thread.sleep(400);
+					stopAllMotors();
+					
+					//Left
+					activateAllMotors (0, 3, -8);
+					Thread.sleep(450);
+					stopAllMotors();
+					
+					//Up
+					activateAllMotors (-5, -10, 0);
+					Thread.sleep(450);
+					stopAllMotors();
+					
+					//Right
+					activateAllMotors (0, 4, 7);
+					Thread.sleep(500);
+					stopAllMotors();
+					Thread.sleep(400);
+					
+					pennUp();
+					
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		draw.start();
+		try {
+			draw.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }

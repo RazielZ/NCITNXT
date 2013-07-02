@@ -42,7 +42,7 @@
         android:layout_below="@+id/m3b2"
         android:layout_marginTop="20dp"
         android:max="100"
-        android:progress="15" />
+        android:progress="8" />
 
     <SeekBar
         android:id="@+id/speedM3"
@@ -52,7 +52,7 @@
         android:layout_below="@+id/speedM2"
         android:layout_marginTop="18dp"
         android:max="100"
-        android:progress="15" />
+        android:progress="8" />
 
     <SeekBar
         android:id="@+id/speedM2"
@@ -62,7 +62,7 @@
         android:layout_below="@+id/speedM1"
         android:layout_marginTop="17dp"
         android:max="100"
-        android:progress="15" />
+        android:progress="8" />
 
     <Button
         android:id="@+id/modeswitch"
