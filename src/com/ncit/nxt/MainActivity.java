@@ -60,7 +60,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 	//Variabila pentru modul de desenare selectat
 	private int drawMode = 0;
 	//Variabila pentru nr total de moduri
-	private int noDrawingModes = 10;
+	private int noDrawingModes = 14;
 	
 	//Status conexiune
 	private TextView testStatusTextView; 
@@ -226,6 +226,18 @@ public class MainActivity extends Activity implements SensorEventListener {
 				if (drawMode == 9) {
 					bVerticalLine.setText("5");
 				}
+				if (drawMode == 10) {
+					bVerticalLine.setText("6");
+				}
+				if (drawMode == 11) {
+					bVerticalLine.setText("8");
+				}
+				if (drawMode == 12) {
+					bVerticalLine.setText("9");
+				}
+				if (drawMode == 13) {
+					bVerticalLine.setText("0");
+				}
 			}
 		});
 		
@@ -315,6 +327,22 @@ public class MainActivity extends Activity implements SensorEventListener {
 							
 						case 9:
 							drawFive();
+							break;
+							
+						case 10:
+							drawSix();
+							break;
+							
+						case 11:
+							drawEight();
+							break;
+							
+						case 12:
+							drawNine();
+							break;
+						
+						case 13:
+							drawZero();
 							break;
 							
 						default: stopAllMotors(); break;
@@ -780,51 +808,42 @@ public class MainActivity extends Activity implements SensorEventListener {
 			@Override
 			public void run() {
 
-				//Left
-				activateAllMotors (-1, 0, -5);
 				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				//Up
-				activateAllMotors (-3, -17, 0);
-				try {
-					Thread.sleep(250);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				stopAllMotors();
-				//Right
-				activateAllMotors (-2, 5, 8);
-				try {
+					//Left
+					activateAllMotors (0, 0, -7);
+					Thread.sleep(450);
+					stopAllMotors();
+					
+					Thread.sleep(200);
+					
+					//Up
+					activateAllMotors (-5, -10, 0);
+					Thread.sleep(450);
+					stopAllMotors();
+					
+					//Right
+					activateAllMotors (2, 0, 8);
 					Thread.sleep(400);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				stopAllMotors();
-				try {
+					stopAllMotors();
+					
+					//Up
+					activateAllMotors (-5, -10, -2);
+					Thread.sleep(450);
+					stopAllMotors();
+					
+					//Left
+					activateAllMotors (-2, 0, -7);
+					Thread.sleep(450);
+					stopAllMotors();
+					
 					Thread.sleep(300);
+					pennUp();
+					
+					
+					
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				//Up
-				activateAllMotors (-5, -10, 0);
-				try {
-					Thread.sleep(350);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				stopAllMotors();
-				//Left
-				activateAllMotors (0, 0, -7);
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				stopAllMotors();
-				pennUp();
 			}
 		});
 		draw.start();
@@ -904,9 +923,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 				}
 				stopAllMotors();
 				//Left
-				activateAllMotors (0, 0, -7);
+				activateAllMotors (0, 0, -8);
 				try {
-					Thread.sleep(500);
+					Thread.sleep(450);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -917,9 +936,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 					e.printStackTrace();
 				}
 				//Right
-				activateAllMotors (0, 0, 7);
+				activateAllMotors (0, 0, 8);
 				try {
-					Thread.sleep(500);
+					Thread.sleep(400);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -983,7 +1002,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 				}
 				stopAllMotors();
 				//Left
-				activateAllMotors (0, 0, -7);
+				activateAllMotors (0, 0, -8);
 				try {
 					Thread.sleep(400);
 				} catch (InterruptedException e) {
@@ -1024,6 +1043,54 @@ public class MainActivity extends Activity implements SensorEventListener {
 			public void run() {
 				try {
 					//Right
+					activateAllMotors (0, 0, 8);
+					Thread.sleep(400);
+					stopAllMotors();
+					
+					//Up
+					activateAllMotors (-5, -10, 0);
+					Thread.sleep(400);
+					stopAllMotors();
+					
+					//Left
+					activateAllMotors (0, 3, -8);
+					Thread.sleep(400);
+					stopAllMotors();
+					
+					//Up
+					activateAllMotors (-5, -10, 0);
+					Thread.sleep(450);
+					stopAllMotors();
+					
+					//Right
+					activateAllMotors (0, 4, 7);
+					Thread.sleep(500);
+					stopAllMotors();
+					Thread.sleep(400);
+					
+					pennUp();
+					
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		draw.start();
+		try {
+			draw.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void drawSix () {
+		Thread draw = new Thread (new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					
+					//Right
 					activateAllMotors (0, 0, 7);
 					Thread.sleep(400);
 					stopAllMotors();
@@ -1038,6 +1105,16 @@ public class MainActivity extends Activity implements SensorEventListener {
 					Thread.sleep(450);
 					stopAllMotors();
 					
+					//Down
+					activateAllMotors (5, 10, 0);
+					Thread.sleep(450);
+					stopAllMotors();
+					
+					//Up
+					activateAllMotors (-5, -10, 0);
+					Thread.sleep(450);
+					stopAllMotors();
+					
 					//Up
 					activateAllMotors (-5, -10, 0);
 					Thread.sleep(450);
@@ -1049,6 +1126,174 @@ public class MainActivity extends Activity implements SensorEventListener {
 					stopAllMotors();
 					Thread.sleep(400);
 					
+					pennUp();
+					
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		draw.start();
+		try {
+			draw.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void drawEight() {
+		Thread draw = new Thread (new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					
+					//Right
+					activateAllMotors (0, 0, 7);
+					Thread.sleep(450);
+					stopAllMotors();
+					
+					//Up
+					activateAllMotors (-5, -10, 0);
+					Thread.sleep(400);
+					stopAllMotors();
+					
+					//Left
+					activateAllMotors (0, 3, -8);
+					Thread.sleep(450);
+					stopAllMotors();
+					
+					//Down
+					activateAllMotors (5, 10, 0);
+					Thread.sleep(450);
+					stopAllMotors();
+					
+					//Up
+					activateAllMotors (-5, -10, 0);
+					Thread.sleep(450);
+					stopAllMotors();
+					
+					//Up
+					activateAllMotors (-5, -10, 0);
+					Thread.sleep(450);
+					stopAllMotors();
+					
+					//Right
+					activateAllMotors (0, 4, 8);
+					Thread.sleep(400);
+					stopAllMotors();
+					Thread.sleep(400);
+					
+					//Down
+					activateAllMotors (5, 10, 0);
+					Thread.sleep(500);
+					stopAllMotors();
+					
+					pennUp();
+					
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		draw.start();
+		try {
+			draw.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void drawNine () {
+		
+		Thread draw = new Thread (new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					//Right
+					activateAllMotors (0, 0, 8);
+					Thread.sleep(390);
+					stopAllMotors();
+					
+					//Up
+					activateAllMotors (-5, -10, 0);
+					Thread.sleep(400);
+					stopAllMotors();
+					
+					//Up
+					activateAllMotors (-5, -10, 0);
+					Thread.sleep(400);
+					stopAllMotors();
+					
+					//Left
+					activateAllMotors (0, 3, -8);
+					Thread.sleep(450);
+					stopAllMotors();
+					
+					//Down
+					activateAllMotors (5, 10, 0);
+					Thread.sleep(500);
+					stopAllMotors();
+					
+					//Right
+					activateAllMotors (0, 4, 7);
+					Thread.sleep(500);
+					stopAllMotors();
+					
+					Thread.sleep(400);
+					pennUp();
+					
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		draw.start();
+		try {
+			draw.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void drawZero() {
+Thread draw = new Thread (new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					//Right
+					activateAllMotors (0, 0, 8);
+					Thread.sleep(390);
+					stopAllMotors();
+					
+					//Up
+					activateAllMotors (-5, -10, 0);
+					Thread.sleep(400);
+					stopAllMotors();
+					
+					//Up
+					activateAllMotors (-5, -10, 0);
+					Thread.sleep(400);
+					stopAllMotors();
+					
+					//Left
+					activateAllMotors (0, 3, -8);
+					Thread.sleep(450);
+					stopAllMotors();
+					
+					//Down
+					activateAllMotors (5, 10, 0);
+					Thread.sleep(500);
+					stopAllMotors();
+					
+					//Down
+					activateAllMotors (5, 10, 0);
+					Thread.sleep(500);
+					stopAllMotors();
+					
+					Thread.sleep(400);
 					pennUp();
 					
 				} catch (InterruptedException e) {
