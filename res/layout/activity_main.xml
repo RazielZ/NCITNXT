@@ -2,38 +2,45 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/tabHost"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    android:background="@drawable/device" 
+    >
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:orientation="vertical" 
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+       >
        <!-- tools:context=".MainActivity" -->
 
         <TabWidget
             android:id="@android:id/tabs"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true" >
+            android:layout_alignParentBottom="true" 
+			>
         </TabWidget>
 
         <FrameLayout
             android:id="@android:id/tabcontent"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_alignParentTop="true" >
+            android:layout_alignParentTop="true"
+            android:layout_above="@android:id/tabs"
+            >
 
             <RelativeLayout
                 android:id="@+id/tab1"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent" >
-
-                <Button
+               
+		         <Button
                     android:id="@+id/testconnectbutton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentRight="true"
                     android:text="Connect" />
 
                 <Button
@@ -72,7 +79,8 @@
                     android:layout_below="@+id/speedM2"
                     android:layout_marginTop="18dp"
                     android:max="100"
-                    android:progress="8" />
+                    android:progress="8" 
+                    android:paddingBottom="5dp"/>
 
                 <SeekBar
                     android:id="@+id/speedM2"
@@ -83,15 +91,6 @@
                     android:layout_marginTop="17dp"
                     android:max="100"
                     android:progress="8" />
-
-                <Button
-                    android:id="@+id/modeswitch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBaseline="@+id/testconnectbutton"
-                    android:layout_alignBottom="@+id/testconnectbutton"
-                    android:layout_alignRight="@+id/speedM3"
-                    android:text="Mode" />
 
                 <Button
                     android:id="@+id/m3b2"
@@ -138,16 +137,6 @@
                     android:layout_marginBottom="20dp"
                     android:text="Status" />
 
-                <Button
-                    android:id="@+id/bVerticalLine"
-                    style="?android:attr/buttonStyleSmall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBaseline="@+id/modeswitch"
-                    android:layout_alignBottom="@+id/modeswitch"
-                    android:layout_toLeftOf="@+id/m3b1"
-                    android:text="VLine" />
-
                 <TextView
                     android:id="@+id/tvShowSpeed1"
                     android:layout_width="wrap_content"
@@ -155,6 +144,7 @@
                     android:layout_alignBaseline="@+id/m1b1"
                     android:layout_alignBottom="@+id/m1b1"
                     android:layout_centerHorizontal="true"
+                    android:textColor="#FFFFFF"
                     android:text="speed1" />
 
                 <TextView
@@ -164,6 +154,7 @@
                     android:layout_alignBaseline="@+id/m2b1"
                     android:layout_alignBottom="@+id/m2b1"
                     android:layout_centerHorizontal="true"
+                    android:textColor="#FFFFFF"
                     android:text="speed2" />
 
                 <TextView
@@ -173,32 +164,79 @@
                     android:layout_alignBaseline="@+id/m3b1"
                     android:layout_alignBottom="@+id/m3b1"
                     android:layout_centerHorizontal="true"
+                    android:textColor="#FFFFFF"
                     android:text="speed3" />
-
-                <Button
-                    android:id="@+id/bSwitchDrawMode"
-                    style="?android:attr/buttonStyleSmall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBaseline="@+id/testconnectbutton"
-                    android:layout_alignBottom="@+id/testconnectbutton"
-                    android:layout_toLeftOf="@+id/bVerticalLine"
-                    android:text="DMode" />
+                
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/tab2"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent" >
-
-                <Button
-                    android:id="@+id/bCalibration"
-                    style="?android:attr/buttonStyleSmall"
+                android:layout_height="fill_parent" 
+                android:textAlignment="center">
+                
+                <TextView 
+                    android:id="@+id/tvinformation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Clb" />
+                    android:textColor="#FFFFFF"
+                    android:text="Add information !!!"
+                    android:textSize="30dp"/>
+                
             </RelativeLayout>
+            
+            <RelativeLayout
+                android:id="@+id/tab3"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" 
+                android:textAlignment="center">
+                
+                <RelativeLayout
+                    android:layout_width="match_parent"
+			        android:layout_height="match_parent"
+			        android:orientation="vertical"  >
+			        
+		         <Button
+                    android:id="@+id/bCalibration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:text="Clb" />            
+                    
+                 <Button
+                    android:id="@+id/modeswitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                 	android:layout_marginLeft="70dp"
+                    android:text="Mode" />
+               
+                <Button
+                    android:id="@+id/bSwitchDrawMode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="150dp"
+                    android:text="DMode" />
+                
+                <Button
+                    android:id="@+id/bVerticalLine"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="230dp"
+                    android:text="VLine" />
+                
+                
+                </RelativeLayout>
+            </RelativeLayout>
+            
+             <RelativeLayout
+                android:id="@+id/tab4"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" 
+                android:textAlignment="center">
+            </RelativeLayout>
+            
+             
         </FrameLayout>
-    </LinearLayout>
+    </RelativeLayout>
 
 </TabHost>

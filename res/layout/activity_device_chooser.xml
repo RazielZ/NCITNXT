@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@drawable/device"
     android:orientation="vertical" >
 
     <TextView
@@ -11,13 +12,15 @@
         android:background="#666"
         android:paddingLeft="5dp"
         android:text="Paired devices:"
-        android:textColor="#fff" >
+        android:textColor="#fff" 
+        android:textSize="20dp">
     </TextView>
 
     <ListView
         android:id="@+id/paired_devices"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
+
     </ListView>
 
     <TextView

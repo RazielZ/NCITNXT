@@ -9,8 +9,9 @@ public class DrawLettersOnClickListener implements OnClickListener {
 	Letters letters;
 	private DrawModeCallBackInterface drawModeCall;
 	
-	public DrawLettersOnClickListener (Letters letters) {
+	public DrawLettersOnClickListener (Letters letters, DrawModeCallBackInterface toCall) {
 		this.letters = letters;
+		drawModeCall= toCall;
 	}
 	
 	@Override

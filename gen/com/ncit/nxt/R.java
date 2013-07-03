@@ -21,21 +21,22 @@ public final class R {
         public static final int activity_vertical_margin=0x7f040001;
     }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
+        public static final int device=0x7f020000;
+        public static final int ic_launcher=0x7f020001;
     }
     public static final class id {
-        public static final int action_settings=0x7f08001b;
-        public static final int bCalibration=0x7f08001a;
-        public static final int bSwitchDrawMode=0x7f080018;
-        public static final int bVerticalLine=0x7f080014;
+        public static final int action_settings=0x7f08001e;
+        public static final int bCalibration=0x7f080019;
+        public static final int bSwitchDrawMode=0x7f08001b;
+        public static final int bVerticalLine=0x7f08001c;
         public static final int button_scan=0x7f080005;
         public static final int m1b1=0x7f08000a;
         public static final int m1b2=0x7f080009;
         public static final int m2b1=0x7f08000c;
         public static final int m2b2=0x7f08000b;
-        public static final int m3b1=0x7f080012;
+        public static final int m3b1=0x7f080011;
         public static final int m3b2=0x7f08000e;
-        public static final int modeswitch=0x7f080011;
+        public static final int modeswitch=0x7f08001a;
         public static final int new_devices=0x7f080003;
         public static final int no_devices=0x7f080004;
         public static final int paired_devices=0x7f080001;
@@ -43,15 +44,18 @@ public final class R {
         public static final int speedM2=0x7f080010;
         public static final int speedM3=0x7f08000f;
         public static final int tab1=0x7f080007;
-        public static final int tab2=0x7f080019;
+        public static final int tab2=0x7f080016;
+        public static final int tab3=0x7f080018;
+        public static final int tab4=0x7f08001d;
         public static final int tabHost=0x7f080006;
         public static final int testconnectbutton=0x7f080008;
-        public static final int testtext=0x7f080013;
+        public static final int testtext=0x7f080012;
         public static final int title_new_devices=0x7f080002;
         public static final int title_paired_devices=0x7f080000;
-        public static final int tvShowSpeed1=0x7f080015;
-        public static final int tvShowSpeed2=0x7f080016;
-        public static final int tvShowSpeed3=0x7f080017;
+        public static final int tvShowSpeed1=0x7f080013;
+        public static final int tvShowSpeed2=0x7f080014;
+        public static final int tvShowSpeed3=0x7f080015;
+        public static final int tvinformation=0x7f080017;
     }
     public static final class layout {
         public static final int activity_device_chooser=0x7f030000;

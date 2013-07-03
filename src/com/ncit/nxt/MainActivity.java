@@ -85,7 +85,7 @@ public class MainActivity extends Activity implements SensorEventListener, DrawM
 	private Letters letters;
 	
 	private TabHost mTabHost;
-	private TabSpec tab1, tab2;
+	private TabSpec tab1, tab2, tab3;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -99,16 +99,20 @@ public class MainActivity extends Activity implements SensorEventListener, DrawM
         
         tab1 = mTabHost.newTabSpec("First");
         tab1.setContent(R.id.tab1);
-        tab1.setIndicator("First");
+        tab1.setIndicator("Button Mode");
         mTabHost.addTab(tab1);
         
         tab2 = mTabHost.newTabSpec("Second");
         tab2.setContent(R.id.tab2);
-        tab2.setIndicator("Second");
+        tab2.setIndicator("Sensor Mode");
         mTabHost.addTab(tab2);
         
+        tab3 = mTabHost.newTabSpec("Third");
+        tab3.setContent(R.id.tab3);
+        tab3.setIndicator("Draw Mode");
+        mTabHost.addTab(tab3);
         
-		allocateMemory();
+		
 		
 		
 
@@ -136,11 +140,13 @@ public class MainActivity extends Activity implements SensorEventListener, DrawM
 		mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
 		mSensorManager.registerListener(this, mOrientation, SensorManager.SENSOR_DELAY_NORMAL);
 
-		setupUI();
-
+		
 		mNXTTalker = new NXTTalker(mHandler);
 		
-		
+		allocateMemory();
+		setupUI();
+
+
 	}
 	
 	private void allocateMemory () {
@@ -225,7 +231,7 @@ public class MainActivity extends Activity implements SensorEventListener, DrawM
 		
 		//Buton pentru desenare linie verticala
 		bVerticalLine = (Button) findViewById(R.id.bVerticalLine);		
-		bVerticalLine.setOnClickListener(new DrawLettersOnClickListener(letters));
+		bVerticalLine.setOnClickListener(new DrawLettersOnClickListener(letters,this));
 		
 		//Seteaza valoarea initiala pentru seekBars;
 		for (int i = 0; i < speedMotors.length; i++) {
