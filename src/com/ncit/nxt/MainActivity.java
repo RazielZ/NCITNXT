@@ -24,6 +24,8 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.TabHost;
+import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -82,12 +84,33 @@ public class MainActivity extends Activity implements SensorEventListener, DrawM
 	private byte drawPower[] = new byte[3];
 	private Letters letters;
 	
+	private TabHost mTabHost;
+	private TabSpec tab1, tab2;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		allocateMemory();
+		
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.activity_main);
+		
+        mTabHost=(TabHost)findViewById(R.id.tabHost);
+        mTabHost.setup();
+        
+        tab1 = mTabHost.newTabSpec("First");
+        tab1.setContent(R.id.tab1);
+        tab1.setIndicator("First");
+        mTabHost.addTab(tab1);
+        
+        tab2 = mTabHost.newTabSpec("Second");
+        tab2.setContent(R.id.tab2);
+        tab2.setIndicator("Second");
+        mTabHost.addTab(tab2);
+        
+        
+		allocateMemory();
+		
+		
 
 		if (savedInstanceState != null) {
 			mNewLaunch = false;
