@@ -1148,9 +1148,56 @@ public class MainActivity extends Activity implements SensorEventListener {
 			public void run() {
 				try {
 					
+//					//Right
+//					activateAllMotors (0, 0, 7);
+//					Thread.sleep(450);
+//					stopAllMotors();
+//					
+//					//Up
+//					activateAllMotors (-5, -10, 0);
+//					Thread.sleep(400);
+//					stopAllMotors();
+//					
+//					//Left
+//					activateAllMotors (0, 3, -8);
+//					Thread.sleep(450);
+//					stopAllMotors();
+//					
+//					//Down
+//					activateAllMotors (5, 10, 0);
+//					Thread.sleep(450);
+//					stopAllMotors();
+//					
+//					//Up
+//					activateAllMotors (-5, -10, 0);
+//					Thread.sleep(450);
+//					stopAllMotors();
+//					
+//					//Up
+//					activateAllMotors (-5, -10, 0);
+//					Thread.sleep(450);
+//					stopAllMotors();
+//					
+//					//Right
+//					activateAllMotors (0, 4, 8);
+//					Thread.sleep(400);
+//					stopAllMotors();
+//					Thread.sleep(400);
+//					
+//					//Down
+//					activateAllMotors (5, 10, 0);
+//					Thread.sleep(500);
+//					stopAllMotors();
+//					
+//					pennUp();
 					//Right
-					activateAllMotors (0, 0, 7);
-					Thread.sleep(450);
+					activateAllMotors (0, 0, 8);
+					Thread.sleep(390);
+					stopAllMotors();
+					
+					//Up
+					activateAllMotors (-5, -10, 0);
+					Thread.sleep(400);
 					stopAllMotors();
 					
 					//Up
@@ -1165,31 +1212,31 @@ public class MainActivity extends Activity implements SensorEventListener {
 					
 					//Down
 					activateAllMotors (5, 10, 0);
-					Thread.sleep(450);
+					Thread.sleep(500);
 					stopAllMotors();
-					
-					//Up
-					activateAllMotors (-5, -10, 0);
-					Thread.sleep(450);
-					stopAllMotors();
-					
-					//Up
-					activateAllMotors (-5, -10, 0);
-					Thread.sleep(450);
-					stopAllMotors();
-					
-					//Right
-					activateAllMotors (0, 4, 8);
-					Thread.sleep(400);
-					stopAllMotors();
-					Thread.sleep(400);
 					
 					//Down
 					activateAllMotors (5, 10, 0);
 					Thread.sleep(500);
 					stopAllMotors();
 					
+					//Up
+					activateAllMotors (-5, -15, 0);
+					Thread.sleep(400);
+					stopAllMotors();
+					
+					//Right
+					activateAllMotors (0, 0, 10);
+					Thread.sleep(400);
+					stopAllMotors();
+					
+					
+					
+					Thread.sleep(400);
 					pennUp();
+					
+
+					
 					
 				} catch (InterruptedException e) {
 					e.printStackTrace();
