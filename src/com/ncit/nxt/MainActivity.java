@@ -1,7 +1,7 @@
 package com.ncit.nxt;
 import java.util.ArrayList;
 
-import android.R.integer;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -21,9 +21,13 @@ import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLayoutChangeListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TabHost;
@@ -52,23 +56,23 @@ public class MainActivity extends Activity implements SensorEventListener, DrawM
 	private boolean mNewLaunch = true;
 	private String mDeviceAddress = null;
 
-	private ArrayList<Button> motorButtons = new ArrayList<Button>();
+	private ArrayList<ImageButton> motorButtons = new ArrayList<ImageButton>();
 	private Button testConnectButton;
 	private Button switchButton;
-	
+
 	//Buton selectare mod scriere: 0 - Vertical, 1 - Orizontal etc.
 	private Button bSwitchDrawMode;
-	
+
 	//Variabila pentru modul de desenare selectat
 	private int drawMode = 0;
 	//Variabila pentru nr total de moduri
 	private int noDrawingModes = 10;
-	
+
 	//Status conexiune
 	private TextView testStatusTextView; 
 	//Afisare viteze motoare
 	private TextView tvShowSpeeds[] = new TextView[3];
-	
+
 
 	private boolean mRegulateSpeed = true;
 	private boolean mSynchronizeMotors = false;
@@ -78,42 +82,42 @@ public class MainActivity extends Activity implements SensorEventListener, DrawM
 	private Sensor mSensor;
 	private Sensor mOrientation;
 	private String stateText = "";
-	
+
 	private int speedMotors[] = new int[3];	
 	private SeekBar seekBars[] = new SeekBar[3];	
 	private Button bVerticalLine;
 	//putere pentru desenare
 	private byte drawPower[] = new byte[3];
 	private Letters letters;
-	
+
 	private TabHost mTabHost;
 	private TabSpec tab1, tab2, tab3;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.activity_main);
-		
-        mTabHost=(TabHost)findViewById(R.id.tabHost);
-        mTabHost.setup();
-        
-        tab1 = mTabHost.newTabSpec("First");
-        tab1.setContent(R.id.tab1);
-        tab1.setIndicator("Button Mode");
-        mTabHost.addTab(tab1);
-        
-        tab2 = mTabHost.newTabSpec("Second");
-        tab2.setContent(R.id.tab2);
-        tab2.setIndicator("Sensor Mode");
-        mTabHost.addTab(tab2);
-        
-        tab3 = mTabHost.newTabSpec("Third");
-        tab3.setContent(R.id.tab3);
-        tab3.setIndicator("Draw Mode");
-        mTabHost.addTab(tab3);
-        
+
+		mTabHost=(TabHost)findViewById(R.id.tabHost);
+		mTabHost.setup();
+
+		tab1 = mTabHost.newTabSpec("First");
+		tab1.setContent(R.id.tab1);
+		tab1.setIndicator("Button Mode");
+		mTabHost.addTab(tab1);
+
+		tab2 = mTabHost.newTabSpec("Second");
+		tab2.setContent(R.id.tab2);
+		tab2.setIndicator("Sensor Mode");
+		mTabHost.addTab(tab2);
+
+		tab3 = mTabHost.newTabSpec("Third");
+		tab3.setContent(R.id.tab3);
+		tab3.setIndicator("Draw Mode");
+		mTabHost.addTab(tab3);
+
 		for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
 			TextView tView = (TextView) mTabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
 			tView.setTextColor(Color.WHITE);
@@ -143,19 +147,19 @@ public class MainActivity extends Activity implements SensorEventListener, DrawM
 		mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
 		mSensorManager.registerListener(this, mOrientation, SensorManager.SENSOR_DELAY_NORMAL);
 
-		
+
 		mNXTTalker = new NXTTalker(mHandler);
-		
+
 		allocateMemory();
 		setupUI();
 
 
 	}
-	
+
 	private void allocateMemory () {
-		
+
 		letters = new Letters (mNXTTalker);
-		
+
 	}
 
 	@Override
@@ -175,23 +179,32 @@ public class MainActivity extends Activity implements SensorEventListener, DrawM
 				}
 			}
 		}
-		
+
 	}
 
+	@SuppressLint("NewApi")
 	private void setupUI() {
-		
+		//Assign motor buttons
+		motorButtons.add((ImageButton) findViewById(R.id.m1b1));
+		motorButtons.add((ImageButton) findViewById(R.id.m1b2));
+		motorButtons.add((ImageButton) findViewById(R.id.m2b1));
+		motorButtons.add((ImageButton) findViewById(R.id.m2b2));
+		motorButtons.add((ImageButton) findViewById(R.id.m3b1));
+		motorButtons.add((ImageButton) findViewById(R.id.m3b2));
+
+
 		//SeekBars:
 		seekBars[0] = (SeekBar) findViewById(R.id.speedM1);
 		seekBars[1] = (SeekBar) findViewById(R.id.speedM2);
 		seekBars[2] = (SeekBar) findViewById(R.id.speedM3);
-		
+
 		//Buton selectare mod desenare
 		bSwitchDrawMode = (Button) findViewById(R.id.bSwitchDrawMode);
 		bSwitchDrawMode.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				
+
 				drawMode = (drawMode + 1) % noDrawingModes;
 
 				if (drawMode == 0) {
@@ -226,58 +239,71 @@ public class MainActivity extends Activity implements SensorEventListener, DrawM
 				}
 			}
 		});
-		
+
 		//Afisare viteze motoare conform seekBars
 		tvShowSpeeds[0] = (TextView) findViewById(R.id.tvShowSpeed1);
 		tvShowSpeeds[1] = (TextView) findViewById(R.id.tvShowSpeed2);
 		tvShowSpeeds[2] = (TextView) findViewById(R.id.tvShowSpeed3);
-		
+
 		//Buton pentru desenare linie verticala
 		bVerticalLine = (Button) findViewById(R.id.bVerticalLine);		
 		bVerticalLine.setOnClickListener(new DrawLettersOnClickListener(letters,this));
-		
+
 		//Seteaza valoarea initiala pentru seekBars;
 		for (int i = 0; i < speedMotors.length; i++) {
 			speedMotors[i] = seekBars[i].getProgress();
+			tvShowSpeeds[i].addOnLayoutChangeListener(new LayoutChangeForText());
+			tvShowSpeeds[i].setText(Integer.toString(speedMotors[i])+"%");
 		}
-		
+
 		//Adaugare eveniment seekBar listener
 		for (SeekBar s : seekBars) {
 			s.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-				
+
 				@Override
 				public void onStopTrackingTouch(SeekBar seekBar) {
 				}
-				
+
 				@Override
 				public void onStartTrackingTouch(SeekBar seekBar) {
 				}
-				
+
 				@Override
 				public void onProgressChanged(SeekBar seekBar, int progress,
 						boolean fromUser) {
 					if (seekBar == seekBars[0]) {
 						speedMotors[0] = progress;
-						tvShowSpeeds[0].setText(progress + " %");
+						if (speedMotors[0]>50) {
+							tvShowSpeeds[0].setTextColor(Color.rgb(255, 255-(speedMotors[0]-50)*5, 255-(speedMotors[0]-50)*5));
+							tvShowSpeeds[0].setText(progress + " %");
+						} else {
+							tvShowSpeeds[0].setTextColor(Color.WHITE);
+							tvShowSpeeds[0].setText(progress + " %");
+						}
 					}
 					if (seekBar == seekBars[1]) {
 						speedMotors[1] = progress;
-						tvShowSpeeds[1].setText(progress + " %");
+						if (speedMotors[1]>50) {
+							tvShowSpeeds[1].setTextColor(Color.rgb(255, 255-(speedMotors[1]-50)*5, 255-(speedMotors[1]-50)*5));
+							tvShowSpeeds[1].setText(progress + " %");
+						} else {
+							tvShowSpeeds[1].setTextColor(Color.WHITE);
+							tvShowSpeeds[1].setText(progress + " %");
+						}
 					}
 					if (seekBar == seekBars[2]) {
 						speedMotors[2] = progress;
-						tvShowSpeeds[2].setText(progress + " %");
+						if (speedMotors[2]>50) {
+							tvShowSpeeds[2].setTextColor(Color.rgb(255, 255-(speedMotors[2]-50)*5, 255-(speedMotors[2]-50)*5));
+							tvShowSpeeds[2].setText(progress + " %");
+						} else {
+							tvShowSpeeds[2].setTextColor(Color.WHITE);
+							tvShowSpeeds[2].setText(progress + " %");
+						}
 					}
 				}
 			});
 		}
-		
-		motorButtons.add((Button) findViewById(R.id.m1b1));
-		motorButtons.add((Button) findViewById(R.id.m1b2));
-		motorButtons.add((Button) findViewById(R.id.m2b1));
-		motorButtons.add((Button) findViewById(R.id.m2b2));
-		motorButtons.add((Button) findViewById(R.id.m3b1));
-		motorButtons.add((Button) findViewById(R.id.m3b2));
 
 		testStatusTextView = (TextView) findViewById(R.id.testtext);
 		testStatusTextView.setText(stateText+" (Button Mode)");
@@ -313,11 +339,11 @@ public class MainActivity extends Activity implements SensorEventListener, DrawM
 
 			@Override
 			public void onClick(View v) {
-				
+
 				sensorMode = !sensorMode;
-				mNXTTalker.motor(mNXTTalker.MOTOR1, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
-				mNXTTalker.motor(mNXTTalker.MOTOR2, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
-				mNXTTalker.motor(mNXTTalker.MOTOR3, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
+				mNXTTalker.motor(NXTTalker.MOTOR1, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
+				mNXTTalker.motor(NXTTalker.MOTOR2, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
+				mNXTTalker.motor(NXTTalker.MOTOR3, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
 				if (sensorMode) {
 					firstOrientation = true;
 					testStatusTextView.setText(stateText+" (Sensor Mode)");
@@ -421,29 +447,30 @@ public class MainActivity extends Activity implements SensorEventListener, DrawM
 			sign = dir;
 			Log.d("power1", "PowerInitial: "+ppower);
 			switch (motor){ 
-				case 0: motorB = NXTTalker.MOTOR1; motorBi = 0; break;
-				case 1: motorB = NXTTalker.MOTOR2; motorBi = 1; break;
-				case 2: motorB = NXTTalker.MOTOR3; motorBi = 2; break;
-				default: motorB = NXTTalker.MOTOR1; break;
+			case 0: motorB = NXTTalker.MOTOR1; motorBi = 0; break;
+			case 1: motorB = NXTTalker.MOTOR2; motorBi = 1; break;
+			case 2: motorB = NXTTalker.MOTOR3; motorBi = 2; break;
+			default: motorB = NXTTalker.MOTOR1; break;
 			}
 		}
 
 		@Override
 		public boolean onTouch(View v, MotionEvent event) {
 			int action = event.getAction();
-			
+
 			Log.d ("power1", "speedMotors: " + speedMotors[0] + " " + speedMotors[1] + " " + speedMotors[2]);
 			if (!sensorMode) {
 				if (action == MotionEvent.ACTION_DOWN) {
-					
+					v.setPressed(true);
 					byte fPower = (byte) (speedMotors[motorBi] * sign);
 					Log.d("MMOD", "Motormod: "+motormod);
 					Log.d("cPWR", "Current Power: "+power);
 					Log.d("fPWR", "Final Power: "+fPower);
-					
+
 					Log.d ("power1", "action= motor: " + motorB + " fpower: " + fPower);
 					mNXTTalker.motor(motorB, fPower, mRegulateSpeed, mSynchronizeMotors);
 				} else if ((action == MotionEvent.ACTION_UP) || (action == MotionEvent.ACTION_CANCEL)) {
+					v.setPressed(false);
 					mNXTTalker.motor(motorB, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
 				}
 			}
@@ -534,13 +561,33 @@ public class MainActivity extends Activity implements SensorEventListener, DrawM
 			}
 		}
 	}
-	
+
 
 	@Override
 	public int getDrawMode() {
 		return drawMode;
 	}
-	
-	
+
+	@SuppressLint("NewApi")
+	private class LayoutChangeForText implements OnLayoutChangeListener  {
+
+		@Override
+		public void onLayoutChange(View v, int left, int top, int right,
+				int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+			if (left == 0 && top == 0 && right == 0 && bottom == 0) {
+				return;
+			}
+			for (int i = 0; i < speedMotors.length; i++) {
+				if (motorButtons.get(i*2).getHeight()!=0&&tvShowSpeeds[i].getHeight()!=0) {
+					RelativeLayout.LayoutParams lParams;
+					Log.d("TXH","Height: "+tvShowSpeeds[i].getHeight());
+					lParams = (LayoutParams) tvShowSpeeds[i].getLayoutParams();
+					lParams.topMargin = motorButtons.get(i*2).getHeight()/2-tvShowSpeeds[i].getHeight()/2;
+					tvShowSpeeds[i].setLayoutParams(lParams);
+				}
+			}
+		}
+
+	}
 }
 
