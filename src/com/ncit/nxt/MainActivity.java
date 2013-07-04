@@ -334,25 +334,30 @@ public class MainActivity extends Activity implements SensorEventListener, DrawM
 			}
 		});
 
-		switchButton = (Button)findViewById(R.id.modeswitch);
-		switchButton.setOnClickListener(new OnClickListener() {
-
+		mTabHost.getTabWidget().getChildAt(1).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
-				sensorMode = !sensorMode;
+				mTabHost.setCurrentTab(1);
+				sensorMode = true;
 				mNXTTalker.motor(NXTTalker.MOTOR1, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
 				mNXTTalker.motor(NXTTalker.MOTOR2, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
 				mNXTTalker.motor(NXTTalker.MOTOR3, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
 				if (sensorMode) {
 					firstOrientation = true;
-					testStatusTextView.setText(stateText+" (Sensor Mode)");
-				} else {
-					testStatusTextView.setText(stateText+" (Button Mode)");
-				}
+				}				
 			}
 		});
 		displayState();
+		
+		
+		mTabHost.getTabWidget().getChildAt(0).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				sensorMode = false;
+				mTabHost.setCurrentTab(0);
+			}
+		});		
 	}
 
 	@Override

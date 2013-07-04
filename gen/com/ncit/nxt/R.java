@@ -29,14 +29,11 @@ public final class R {
         public static final int arrow_r2=0x7f020005;
         public static final int device=0x7f020006;
         public static final int ic_launcher=0x7f020007;
-        public static final int oneup=0x7f020008;
-        public static final int twoup=0x7f020009;
     }
     public static final class id {
-        public static final int action_settings=0x7f08001e;
-        public static final int bCalibration=0x7f080019;
-        public static final int bSwitchDrawMode=0x7f08001b;
-        public static final int bVerticalLine=0x7f08001c;
+        public static final int action_settings=0x7f08001c;
+        public static final int bSwitchDrawMode=0x7f080019;
+        public static final int bVerticalLine=0x7f08001a;
         public static final int button_scan=0x7f080005;
         public static final int m1b1=0x7f08000d;
         public static final int m1b2=0x7f08000a;
@@ -44,7 +41,6 @@ public final class R {
         public static final int m2b2=0x7f08000b;
         public static final int m3b1=0x7f08000f;
         public static final int m3b2=0x7f08000c;
-        public static final int modeswitch=0x7f08001a;
         public static final int new_devices=0x7f080003;
         public static final int no_devices=0x7f080004;
         public static final int paired_devices=0x7f080001;
@@ -54,7 +50,7 @@ public final class R {
         public static final int tab1=0x7f080007;
         public static final int tab2=0x7f080016;
         public static final int tab3=0x7f080018;
-        public static final int tab4=0x7f08001d;
+        public static final int tab4=0x7f08001b;
         public static final int tabHost=0x7f080006;
         public static final int testconnectbutton=0x7f080009;
         public static final int testtext=0x7f080008;
