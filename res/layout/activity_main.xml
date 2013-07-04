@@ -3,71 +3,117 @@
     android:id="@+id/tabHost"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/device" 
-    >
+    android:background="@drawable/device" >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" 
+        android:orientation="vertical"
         android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-       >
-       <!-- tools:context=".MainActivity" -->
+        android:paddingRight="5dp" >
+
+        <!-- tools:context=".MainActivity" -->
 
         <TabWidget
             android:id="@android:id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true" 
-			>
+            android:layout_alignParentBottom="true" >
         </TabWidget>
 
         <FrameLayout
             android:id="@android:id/tabcontent"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_alignParentTop="true"
             android:layout_above="@android:id/tabs"
-            >
+            android:layout_alignParentTop="true" >
 
             <RelativeLayout
                 android:id="@+id/tab1"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent" >
-               
-		         <Button
+
+                <TextView
+                    android:id="@+id/testtext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:text="Status" />
+
+                <Button
                     android:id="@+id/testconnectbutton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
                     android:text="Connect" />
 
-                <Button
+                <ImageButton
                     android:id="@+id/m1b2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignBaseline="@+id/m1b1"
-                    android:layout_alignBottom="@+id/m1b1"
-                    android:layout_marginRight="48dp"
-                    android:text="M1 B2" />
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@id/testtext"
+                    android:layout_marginTop="30dp"
+                    android:src="@drawable/arrow_l0" />
 
-                <Button
+                <ImageButton
                     android:id="@+id/m2b2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignBaseline="@+id/m2b1"
-                    android:layout_alignBottom="@+id/m2b1"
-                    android:layout_alignLeft="@+id/m1b2"
-                    android:text="M2 B2" />
+                    android:layout_below="@id/m1b2"
+                    android:src="@drawable/arrow_l1" />
+
+                <ImageButton
+                    android:id="@+id/m3b2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/m2b2"
+                    android:src="@drawable/arrow_l2" />
+
+                <ImageButton
+                    android:id="@+id/m1b1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:baselineAlignBottom="@id/m1b2"
+                    android:layout_alignBaseline="@id/m1b2"
+                    android:layout_alignBottom="@id/m1b2"
+                    android:layout_alignTop="@id/m1b2"
+                    android:src="@drawable/arrow_r0" />
+
+                <ImageButton
+                    android:id="@+id/m2b1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/m1b1"
+                    android:layout_alignRight="@id/m1b1"
+                    android:src="@drawable/arrow_r1" />
+
+                <ImageButton
+                    android:id="@+id/m3b1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/m2b1"
+                    android:layout_alignRight="@id/m2b1"
+                    android:src="@drawable/arrow_r2" />
 
                 <SeekBar
                     android:id="@+id/speedM1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_below="@+id/m3b2"
-                    android:layout_marginTop="20dp"
+                    android:layout_below="@id/m3b1"
+                    android:layout_marginTop="15dp"
+                    android:max="100"
+                    android:progress="8" />
+
+                <SeekBar
+                    android:id="@+id/speedM2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/speedM1"
+                    android:layout_marginTop="15dp"
                     android:max="100"
                     android:progress="8" />
 
@@ -75,167 +121,104 @@
                     android:id="@+id/speedM3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/speedM2"
                     android:layout_below="@+id/speedM2"
-                    android:layout_marginTop="18dp"
-                    android:max="100"
-                    android:progress="8" 
-                    android:paddingBottom="5dp"/>
-
-                <SeekBar
-                    android:id="@+id/speedM2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/speedM1"
-                    android:layout_below="@+id/speedM1"
-                    android:layout_marginTop="17dp"
+                    android:layout_marginTop="15dp"
                     android:max="100"
                     android:progress="8" />
-
-                <Button
-                    android:id="@+id/m3b2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBaseline="@+id/m3b1"
-                    android:layout_alignBottom="@+id/m3b1"
-                    android:layout_alignLeft="@+id/m2b2"
-                    android:text="M3 B2" />
-
-                <Button
-                    android:id="@+id/m2b1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/m1b1"
-                    android:layout_below="@+id/m1b1"
-                    android:layout_marginTop="20dp"
-                    android:text="M2 B1" />
-
-                <Button
-                    android:id="@+id/m1b1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignRight="@+id/speedM1"
-                    android:layout_marginTop="44dp"
-                    android:text="M1 B1" />
-
-                <Button
-                    android:id="@+id/m3b1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/m2b1"
-                    android:layout_below="@+id/m2b1"
-                    android:layout_marginTop="15dp"
-                    android:text="M3 B1" />
-
-                <TextView
-                    android:id="@+id/testtext"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@+id/m1b2"
-                    android:layout_alignLeft="@+id/m1b2"
-                    android:layout_marginBottom="20dp"
-                    android:text="Status" />
 
                 <TextView
                     android:id="@+id/tvShowSpeed1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignBaseline="@+id/m1b1"
-                    android:layout_alignBottom="@+id/m1b1"
+                    android:layout_alignTop="@+id/m1b1"
                     android:layout_centerHorizontal="true"
-                    android:textColor="#FFFFFF"
-                    android:text="speed1" />
+                    android:text="speed1"
+                    android:textColor="#FFFFFF" />
 
                 <TextView
                     android:id="@+id/tvShowSpeed2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignBaseline="@+id/m2b1"
-                    android:layout_alignBottom="@+id/m2b1"
+                    android:layout_alignTop="@+id/m2b1"
                     android:layout_centerHorizontal="true"
-                    android:textColor="#FFFFFF"
-                    android:text="speed2" />
+                    android:text="speed2"
+                    android:textColor="#FFFFFF" />
 
                 <TextView
                     android:id="@+id/tvShowSpeed3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignBaseline="@+id/m3b1"
-                    android:layout_alignBottom="@+id/m3b1"
+                    android:layout_alignTop="@+id/m3b1"
                     android:layout_centerHorizontal="true"
-                    android:textColor="#FFFFFF"
-                    android:text="speed3" />
-                
+                    android:text="speed3"
+                    android:textColor="#FFFFFF" />
+
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/tab2"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent" 
-                android:textAlignment="center">
-                
-                <TextView 
+                android:layout_height="fill_parent"
+                android:textAlignment="center" >
+
+                <TextView
                     android:id="@+id/tvinformation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#FFFFFF"
                     android:text="Add information !!!"
-                    android:textSize="30dp"/>
-                
+                    android:textColor="#FFFFFF"
+                    android:textSize="30dp" />
             </RelativeLayout>
-            
+
             <RelativeLayout
                 android:id="@+id/tab3"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent" 
-                android:textAlignment="center">
-                
+                android:layout_height="fill_parent"
+                android:textAlignment="center" >
+
                 <RelativeLayout
                     android:layout_width="match_parent"
-			        android:layout_height="match_parent"
-			        android:orientation="vertical"  >
-			        
-		         <Button
-                    android:id="@+id/bCalibration"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:text="Clb" />            
-                    
-                 <Button
-                    android:id="@+id/modeswitch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                 	android:layout_marginLeft="70dp"
-                    android:text="Mode" />
-               
-                <Button
-                    android:id="@+id/bSwitchDrawMode"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="150dp"
-                    android:text="DMode" />
-                
-                <Button
-                    android:id="@+id/bVerticalLine"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="230dp"
-                    android:text="VLine" />
-                
-                
+                    android:layout_height="match_parent"
+                    android:orientation="vertical" >
+
+                    <Button
+                        android:id="@+id/bCalibration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:text="Clb" />
+
+                    <Button
+                        android:id="@+id/modeswitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="70dp"
+                        android:text="Mode" />
+
+                    <Button
+                        android:id="@+id/bSwitchDrawMode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="150dp"
+                        android:text="DMode" />
+
+                    <Button
+                        android:id="@+id/bVerticalLine"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="230dp"
+                        android:text="VLine" />
                 </RelativeLayout>
             </RelativeLayout>
-            
-             <RelativeLayout
+
+            <RelativeLayout
                 android:id="@+id/tab4"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent" 
-                android:textAlignment="center">
+                android:layout_height="fill_parent"
+                android:textAlignment="center" >
             </RelativeLayout>
-            
-             
         </FrameLayout>
     </RelativeLayout>
 
