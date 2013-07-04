@@ -1,11 +1,13 @@
 package com.ncit.nxt;
 import java.util.ArrayList;
 
+import android.R.integer;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -112,9 +114,10 @@ public class MainActivity extends Activity implements SensorEventListener, DrawM
         tab3.setIndicator("Draw Mode");
         mTabHost.addTab(tab3);
         
-		
-		
-		
+		for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
+			TextView tView = (TextView) mTabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
+			tView.setTextColor(Color.WHITE);
+		}
 
 		if (savedInstanceState != null) {
 			mNewLaunch = false;
