@@ -8,7 +8,6 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -17,6 +16,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
@@ -33,11 +34,12 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TabHost;
+import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends Activity implements SensorEventListener, DrawModeCallBackInterface {
+public class MainActivity extends FragmentActivity implements SensorEventListener, DrawModeCallBackInterface {
 
 	private static final int REQUEST_ENABLE_BT = 1;
 	private static final int REQUEST_CONNECT_DEVICE = 2;
@@ -103,7 +105,7 @@ public class MainActivity extends Activity implements SensorEventListener, DrawM
 
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.activity_main);
-
+		
 		mTabHost=(TabHost)findViewById(R.id.tabHost);
 		mTabHost.setup();
 
@@ -115,6 +117,20 @@ public class MainActivity extends Activity implements SensorEventListener, DrawM
 		tab2 = mTabHost.newTabSpec("Second");
 		tab2.setContent(R.id.tab2);
 		tab2.setIndicator("Sensor Mode");
+		
+		mTabHost.setOnTabChangedListener(new OnTabChangeListener() {
+			
+			@Override
+			public void onTabChanged(String tabId) {
+				if (tabId.equals("Second")) {
+					//MotionHint Dialog
+					FragmentManager fm = getSupportFragmentManager();
+			        SensorHintsDialog sensorHintsDialog = new SensorHintsDialog();
+			        sensorHintsDialog.show(fm, "Motion Hint Dialog");
+				}
+			}
+		});
+		
 		mTabHost.addTab(tab2);
 
 		tab3 = mTabHost.newTabSpec("Third");
@@ -189,6 +205,7 @@ public class MainActivity extends Activity implements SensorEventListener, DrawM
 	@SuppressLint("NewApi")
 	private void setupUI() {
 		
+		
 		//Imagini animatie sensor
 		sensorImages.add((ImageView) findViewById(R.id.inactive_l20));
 		sensorImages.add((ImageView) findViewById(R.id.inactive_u0));
@@ -259,7 +276,7 @@ public class MainActivity extends Activity implements SensorEventListener, DrawM
 		tvShowSpeeds[0] = (TextView) findViewById(R.id.tvShowSpeed1);
 		tvShowSpeeds[1] = (TextView) findViewById(R.id.tvShowSpeed2);
 		tvShowSpeeds[2] = (TextView) findViewById(R.id.tvShowSpeed3);
-
+		
 		//Buton pentru desenare linie verticala
 		bVerticalLine = (Button) findViewById(R.id.bVerticalLine);		
 		bVerticalLine.setOnClickListener(new DrawLettersOnClickListener(letters,this));
