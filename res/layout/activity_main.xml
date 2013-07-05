@@ -76,27 +76,27 @@
                     android:id="@+id/m1b1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:baselineAlignBottom="@id/m1b2"
                     android:layout_alignBaseline="@id/m1b2"
                     android:layout_alignBottom="@id/m1b2"
+                    android:layout_alignParentRight="true"
                     android:layout_alignTop="@id/m1b2"
+                    android:baselineAlignBottom="@id/m1b2"
                     android:src="@drawable/arrow_r0" />
 
                 <ImageButton
                     android:id="@+id/m2b1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/m1b1"
                     android:layout_alignRight="@id/m1b1"
+                    android:layout_below="@id/m1b1"
                     android:src="@drawable/arrow_r1" />
 
                 <ImageButton
                     android:id="@+id/m3b1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/m2b1"
                     android:layout_alignRight="@id/m2b1"
+                    android:layout_below="@id/m2b1"
                     android:src="@drawable/arrow_r2" />
 
                 <SeekBar
@@ -154,7 +154,6 @@
                     android:layout_centerHorizontal="true"
                     android:text="speed3"
                     android:textColor="#FFFFFF" />
-
             </RelativeLayout>
 
             <RelativeLayout
@@ -170,6 +169,15 @@
                     android:text="Add information !!!"
                     android:textColor="#FFFFFF"
                     android:textSize="30dp" />
+
+                <ImageView
+                    android:id="@+id/sensorimage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    
+                    android:src="@drawable/active_u0" />
             </RelativeLayout>
 
             <RelativeLayout
