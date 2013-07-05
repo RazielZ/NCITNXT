@@ -171,13 +171,77 @@
                     android:textSize="30dp" />
 
                 <ImageView
-                    android:id="@+id/sensorimage"
+                    android:id="@+id/anchor"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
-                    
-                    android:src="@drawable/active_u0" />
+                    android:src="@drawable/transparent_vertical_line" />
+
+                <ImageView
+                    android:id="@+id/inactive_u0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@id/anchor"
+                    android:layout_above="@id/anchor"
+                    android:src="@drawable/inactive_u0" />
+
+                <ImageView
+                    android:id="@+id/inactive_u1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/anchor"
+                    android:layout_above="@id/anchor"
+                    android:src="@drawable/inactive_u1" />
+
+                <ImageView
+                    android:id="@+id/inactive_l20"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@id/inactive_u0"
+                    android:layout_below="@id/inactive_u0"
+                    android:src="@drawable/inactive_l20" />
+
+                <ImageView
+                    android:id="@+id/inactive_l21"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@id/inactive_u0"
+                    android:layout_below="@id/inactive_l20"
+                    android:src="@drawable/inactive_l21" />
+                
+                <ImageView
+                    android:id="@+id/inactive_r20"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/inactive_u1"
+                    android:layout_below="@id/inactive_u1"
+                    android:src="@drawable/inactive_r20" />
+                
+                <ImageView
+                    android:id="@+id/inactive_r21"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/inactive_u1"
+                    android:layout_below="@id/inactive_r20"
+                    android:src="@drawable/inactive_r21" />
+                
+                <ImageView
+                    android:id="@+id/inactive_d0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/inactive_l21"
+                    android:layout_below="@id/inactive_l21"
+                    android:src="@drawable/inactive_d0" />
+                
+                <ImageView
+                    android:id="@+id/inactive_d1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@id/inactive_r21"
+                    android:layout_below="@id/inactive_r21"
+                    android:src="@drawable/inactive_d1" />
+                
             </RelativeLayout>
 
             <RelativeLayout

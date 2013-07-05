@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -26,6 +27,7 @@ import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.SeekBar;
@@ -92,6 +94,8 @@ public class MainActivity extends Activity implements SensorEventListener, DrawM
 
 	private TabHost mTabHost;
 	private TabSpec tab1, tab2, tab3;
+	
+	private ArrayList<ImageView> sensorImages = new ArrayList<ImageView>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -184,6 +188,17 @@ public class MainActivity extends Activity implements SensorEventListener, DrawM
 
 	@SuppressLint("NewApi")
 	private void setupUI() {
+		
+		//Imagini animatie sensor
+		sensorImages.add((ImageView) findViewById(R.id.inactive_l20));
+		sensorImages.add((ImageView) findViewById(R.id.inactive_u0));
+		sensorImages.add((ImageView) findViewById(R.id.inactive_u1));
+		sensorImages.add((ImageView) findViewById(R.id.inactive_r20));
+		sensorImages.add((ImageView) findViewById(R.id.inactive_r21));
+		sensorImages.add((ImageView) findViewById(R.id.inactive_d1));
+		sensorImages.add((ImageView) findViewById(R.id.inactive_d0));
+		sensorImages.add((ImageView) findViewById(R.id.inactive_l21));
+		
 		//Assign motor buttons
 		motorButtons.add((ImageButton) findViewById(R.id.m1b1));
 		motorButtons.add((ImageButton) findViewById(R.id.m1b2));
@@ -530,20 +545,54 @@ public class MainActivity extends Activity implements SensorEventListener, DrawM
 				lastValues[1] = linear_acceleration[1];
 				lastValues[2] = linear_acceleration[2];
 
+				//Motor 0:
 				if (Math.abs(linear_acceleration[0])>5) {
 					byte power = (byte) (20*Math.signum(linear_acceleration[0]));
+					
+					//Schimbare imagine sensor in functie de orientare, pentru motorul 0
+					//Motor activ
+					if (linear_acceleration[0] > 0) {
+						sensorImages.get(6).setImageResource(R.drawable.active_d0);
+					} else {
+						sensorImages.get(1).setImageResource(R.drawable.active_u0);
+					}
+					
+					//Activare motor
 					mNXTTalker.motor(mNXTTalker.MOTOR1, power, mRegulateSpeed, mSynchronizeMotors);
+					
 				} else {
+					//Motor inactiv
+					sensorImages.get(1).setImageResource(R.drawable.inactive_u0);
+					sensorImages.get(6).setImageResource(R.drawable.inactive_d0);
+					
+					//Dezactivare motor
 					mNXTTalker.motor(mNXTTalker.MOTOR1, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
 				}
+				
+				//Motor 1:
 				if (Math.abs(linear_acceleration[1])>4) {
 					byte power = (byte) (20*Math.signum(linear_acceleration[1]));
+					
+					//Schimbare imagine sensor in functie de orientare, pentru motorul 0
+					//Motor activ					
+					if (linear_acceleration[1] > 0) {
+						sensorImages.get(2).setImageResource(R.drawable.active_u1);
+					} else {
+						sensorImages.get(5).setImageResource(R.drawable.active_d1);
+					}
+					
+					//Activare motor:
 					mNXTTalker.motor(mNXTTalker.MOTOR2, power, mRegulateSpeed, mSynchronizeMotors);
 				} else {
+					//Motor inactiv
+					sensorImages.get(2).setImageResource(R.drawable.inactive_u1);
+					sensorImages.get(5).setImageResource(R.drawable.inactive_d1);
+					
+					//Dezactivare motor
 					mNXTTalker.motor(mNXTTalker.MOTOR2, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
 				}
 			} else {
-				Log.d("ORI1", "Orientation value 1: "+event.values[0]);
+				//Motor 2:
 				if (firstOrientation) {
 					initialOri = event.values[0];
 					firstOrientation = false;
@@ -553,13 +602,38 @@ public class MainActivity extends Activity implements SensorEventListener, DrawM
 					if (currentOri<0) {
 						currentOri = 360 + currentOri;
 					}
+					//Activare motor (la dreapta)
 					if (currentOri<180&&currentOri>30) {
 						byte power = (byte) (12);
+						
+						//Schimbare imagine (motor activ)
+						sensorImages.get(3).setImageResource(R.drawable.active_r20);
+						sensorImages.get(4).setImageResource(R.drawable.active_r21);
+						
+						//Activare motor:
 						mNXTTalker.motor(mNXTTalker.MOTOR3, power, mRegulateSpeed, mSynchronizeMotors);
+						
+					//Activare motor (la stanga)
 					} else if (currentOri<330&&currentOri>180) {
 						byte power = (byte) (-12);
+						
+						//Schimbare imagine (motor activ)
+						sensorImages.get(0).setImageResource(R.drawable.active_l20);
+						sensorImages.get(7).setImageResource(R.drawable.active_l21);
+						
+						//Activare motor:
 						mNXTTalker.motor(mNXTTalker.MOTOR3, power, mRegulateSpeed, mSynchronizeMotors);
+						
+					//Oprire motor
 					} else {
+						
+						//Schimbare imagini (motor inactiv)
+						sensorImages.get(0).setImageResource(R.drawable.inactive_l20);
+						sensorImages.get(7).setImageResource(R.drawable.inactive_l21);
+						sensorImages.get(3).setImageResource(R.drawable.inactive_r20);
+						sensorImages.get(4).setImageResource(R.drawable.inactive_r21);
+						
+						//Oprire motor
 						mNXTTalker.motor(mNXTTalker.MOTOR3, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
 					}
 				}
