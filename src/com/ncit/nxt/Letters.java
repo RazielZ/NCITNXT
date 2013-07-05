@@ -27,6 +27,58 @@ public class Letters {
 		stopAllMotors();
 	}
 	
+	public void drawZero() {
+		Thread draw = new Thread (new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					//Right
+					activateAllMotors (1, 0, 8);
+					Thread.sleep(400);
+					stopAllMotors();
+
+					//Up
+					activateAllMotors (-5, -10, 0);
+					Thread.sleep(400);
+					stopAllMotors();
+
+					//Up
+					activateAllMotors (-5, -10, 0);
+					Thread.sleep(400);
+					stopAllMotors();
+
+					//Left
+					activateAllMotors (3, 5, -10);
+					Thread.sleep(400);
+					stopAllMotors();
+
+					//Down
+					activateAllMotors (5, 10, 0);
+					Thread.sleep(500);
+					stopAllMotors();
+
+					//Down
+					activateAllMotors (7, 10, 0);
+					Thread.sleep(500);
+					stopAllMotors();
+
+					Thread.sleep(400);
+					pennUp();
+
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		draw.start();
+		try {
+			draw.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void drawOne () {
 		Thread draw = new Thread (new Runnable() {
 
@@ -34,12 +86,12 @@ public class Letters {
 			public void run() {
 				try {
 					//Up
-					activateAllMotors (-4, -8, 0);
-					Thread.sleep(600);
+					activateAllMotors (-7, -12, 0);
+					Thread.sleep(400);
 					
 					//Left-Down (Diagonal)
-					activateAllMotors (8, 5, -10);
-					Thread.sleep(300);
+					activateAllMotors (12, 7, -12);
+					Thread.sleep(250);
 					stopAllMotors();
 					Thread.sleep(400);
 					
@@ -483,55 +535,5 @@ public class Letters {
 		}
 	}
 
-	public void drawZero() {
-		Thread draw = new Thread (new Runnable() {
-
-			@Override
-			public void run() {
-				try {
-					//Right
-					activateAllMotors (0, 0, 8);
-					Thread.sleep(390);
-					stopAllMotors();
-
-					//Up
-					activateAllMotors (-5, -10, 0);
-					Thread.sleep(400);
-					stopAllMotors();
-
-					//Up
-					activateAllMotors (-5, -10, 0);
-					Thread.sleep(400);
-					stopAllMotors();
-
-					//Left
-					activateAllMotors (0, 3, -8);
-					Thread.sleep(450);
-					stopAllMotors();
-
-					//Down
-					activateAllMotors (5, 10, 0);
-					Thread.sleep(500);
-					stopAllMotors();
-
-					//Down
-					activateAllMotors (5, 10, 0);
-					Thread.sleep(500);
-					stopAllMotors();
-
-					Thread.sleep(400);
-					pennUp();
-
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		});
-		draw.start();
-		try {
-			draw.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
+	
 }
