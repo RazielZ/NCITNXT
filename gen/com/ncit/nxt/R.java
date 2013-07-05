@@ -45,12 +45,31 @@ public final class R {
         public static final int inactive_r21=0x7f020015;
         public static final int inactive_u0=0x7f020016;
         public static final int inactive_u1=0x7f020017;
+        public static final int transparent_rectangle=0x7f020018;
+        public static final int transparent_vertical_line=0x7f020019;
+        public static final int white_rectangle=0x7f02001a;
+        public static final int white_vertical_line=0x7f02001b;
     }
     public static final class id {
+<<<<<<< HEAD
         public static final int action_settings=0x7f08001d;
         public static final int bSwitchDrawMode=0x7f08001a;
         public static final int bVerticalLine=0x7f08001b;
+=======
+        public static final int action_settings=0x7f080025;
+        public static final int anchor=0x7f080018;
+        public static final int bSwitchDrawMode=0x7f080022;
+        public static final int bVerticalLine=0x7f080023;
+>>>>>>> 6a95ecc3dcf1be5948d706b4c8a1c756aa3e3e5b
         public static final int button_scan=0x7f080005;
+        public static final int inactive_d0=0x7f08001f;
+        public static final int inactive_d1=0x7f080020;
+        public static final int inactive_l20=0x7f08001b;
+        public static final int inactive_l21=0x7f08001c;
+        public static final int inactive_r20=0x7f08001d;
+        public static final int inactive_r21=0x7f08001e;
+        public static final int inactive_u0=0x7f080019;
+        public static final int inactive_u1=0x7f08001a;
         public static final int m1b1=0x7f08000d;
         public static final int m1b2=0x7f08000a;
         public static final int m2b1=0x7f08000e;
@@ -60,14 +79,18 @@ public final class R {
         public static final int new_devices=0x7f080003;
         public static final int no_devices=0x7f080004;
         public static final int paired_devices=0x7f080001;
-        public static final int sensorimage=0x7f080018;
         public static final int speedM1=0x7f080010;
         public static final int speedM2=0x7f080011;
         public static final int speedM3=0x7f080012;
         public static final int tab1=0x7f080007;
         public static final int tab2=0x7f080016;
+<<<<<<< HEAD
         public static final int tab3=0x7f080019;
         public static final int tab4=0x7f08001c;
+=======
+        public static final int tab3=0x7f080021;
+        public static final int tab4=0x7f080024;
+>>>>>>> 6a95ecc3dcf1be5948d706b4c8a1c756aa3e3e5b
         public static final int tabHost=0x7f080006;
         public static final int testconnectbutton=0x7f080009;
         public static final int testtext=0x7f080008;
