@@ -28,6 +28,8 @@ local.properties
 # PDT-specific
 .buildpath
 
+# Android specific
+R.java
 
 #################
 ## Visual Studio
