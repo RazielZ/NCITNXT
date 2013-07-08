@@ -13,7 +13,9 @@
             android:id="@+id/hint1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="To move the first part of the arm: ..."/>
+            android:text="To move the upper part of the arm:"
+            android:gravity="center_horizontal"
+            android:layout_centerHorizontal="true"/>
         
         <TextView 
             android:id="@+id/centerHorizontal"
@@ -39,6 +41,63 @@
             android:layout_below="@id/hint1"
             android:layout_toRightOf="@id/centerHorizontal"
             android:contentDescription="image for hint_u0" />
+        
+        <TextView 
+            android:id="@+id/hint2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="To move the middle part of the arm:"
+            android:layout_below="@id/ivHint_u0"
+            android:gravity="center_horizontal"
+            android:layout_centerHorizontal="true"/>
+        
+        <ImageView 
+            android:id="@+id/ivHint_d1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/hint_d1"
+            android:layout_below="@id/hint2"
+            android:layout_toLeftOf="@id/centerHorizontal"
+            android:contentDescription="image for hint_d1"/>
+        
+        <ImageView 
+            android:id="@+id/ivHint_u1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/hint_u1"
+            android:layout_marginLeft="10dp"
+            android:layout_below="@id/hint2"
+            android:layout_toRightOf="@id/centerHorizontal"
+            android:contentDescription="image for hint_u1" />
+        
+        <TextView 
+            android:id="@+id/hint3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="To move the base part of the arm:"
+            android:layout_below="@id/ivHint_u1"
+            android:gravity="center_horizontal"
+            android:layout_centerHorizontal="true"/>
+        
+        <ImageView 
+            android:id="@+id/ivHint_l"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/hint_l"
+            android:layout_below="@id/hint3"
+            android:layout_toLeftOf="@id/centerHorizontal"
+            android:contentDescription="image for hint_l"/>
+        
+        <ImageView 
+            android:id="@+id/ivHint_r"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/hint_r"
+            android:layout_marginLeft="5dp"
+            android:layout_below="@id/hint3"
+            android:layout_toRightOf="@id/centerHorizontal"
+            android:contentDescription="image for hint_r" />
+        
     </RelativeLayout>
 
 </ScrollView>

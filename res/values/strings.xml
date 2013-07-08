@@ -6,5 +6,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_device_chooser">DeviceChooser</string>
     <string name="sensorHint">Sensor Hints</string>
+    <string name="connect">Connect</string>
+    <string name="drawModeText">Please select your number and click Draw or choose Voice Control 
+        and say the number that you want to be drawn.</string>
 
 </resources>

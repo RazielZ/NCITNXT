@@ -12,8 +12,6 @@
         android:paddingLeft="5dp"
         android:paddingRight="5dp" >
 
-        <!-- tools:context=".MainActivity" -->
-
         <TabWidget
             android:id="@android:id/tabs"
             android:layout_width="match_parent"
@@ -41,14 +39,6 @@
                     android:layout_alignParentTop="true"
                     android:text="Status" />
 
-                <Button
-                    android:id="@+id/testconnectbutton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentTop="true"
-                    android:text="Connect" />
-
                 <ImageButton
                     android:id="@+id/m1b2"
                     android:layout_width="wrap_content"
@@ -56,6 +46,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_below="@id/testtext"
                     android:layout_marginTop="30dp"
+                    android:layout_marginLeft="10dp"
                     android:src="@drawable/arrow_l0" />
 
                 <ImageButton
@@ -63,6 +54,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/m1b2"
+                    android:layout_alignLeft="@id/m1b2"
                     android:src="@drawable/arrow_l1" />
 
                 <ImageButton
@@ -70,6 +62,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/m2b2"
+                    android:layout_alignLeft="@id/m1b2"
                     android:src="@drawable/arrow_l2" />
 
                 <ImageButton
@@ -81,6 +74,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_alignTop="@id/m1b2"
                     android:baselineAlignBottom="@id/m1b2"
+                    android:layout_marginRight="10dp"
                     android:src="@drawable/arrow_r0" />
 
                 <ImageButton
@@ -166,9 +160,11 @@
                     android:id="@+id/tvinformation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Add information !!!"
-                    android:textColor="#FFFFFF"
-                    android:textSize="30dp" />
+                    android:text="Warning! Sensor mode activated. For more information go to: Settings -> Sensor Hints."
+                    android:textColor="#FFFFFF" 
+                    android:gravity="center_horizontal"
+            		android:layout_centerHorizontal="true"
+            		android:layout_marginTop="10dp" />
 
                 <ImageView
                     android:id="@+id/anchor"
@@ -245,30 +241,75 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/tab3"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:textAlignment="center" >
-
-                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical" >
-
-                    <Button
-                        android:id="@+id/bSwitchDrawMode"
+                
+				<RelativeLayout
+				    android:id="@+id/tab3"
+	                android:layout_width="fill_parent"
+	                android:layout_height="fill_parent"
+	                android:textAlignment="center">
+	                
+                    <!-- textview number choose -->
+                    <TextView
+                        android:id="@+id/number"
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:textColor="#FFFFFF"
+	                    android:layout_centerHorizontal="true"
+	                    android:layout_centerVertical = "true"
+	                    android:padding="10dp"
+	                    android:text="5"
+	                    />
+                    <!-- button decrement -->
+                     <ImageButton
+                        android:id="@+id/bDecrement"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="150dp"
-                        android:text="DMode" />
-
-                    <Button
-                        android:id="@+id/bVerticalLine"
+                        android:layout_toLeftOf="@id/number"
+                        android:layout_centerVertical = "true"
+                        android:src="@drawable/arrow_l2" 
+                        />
+                     <ImageButton
+                        android:id="@+id/bIncrement"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="230dp"
-                        android:text="0" />
+                        android:layout_toRightOf="@id/number"
+                        android:layout_centerVertical = "true"
+                        android:src="@drawable/arrow_r2" 
+                        />
+                    <!-- Buton de desenare; trebuie sa ia valoarea din textview la click si sa deseneze cifra din textview -->"
+                    <Button
+                        android:id="@+id/bDraw"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/bDecrement"
+						android:layout_centerHorizontal="true"
+						android:textColor="#FFFFFF"
+                        android:text="Draw" />
+
                     
+                    <TextView 
+                        android:id = "@+id/infoDraw"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@id/bDecrement"
+                        android:textColor="#FFFFFF"
+                        android:text="@string/drawModeText"
+                       	android:layout_centerHorizontal="true" 
+                       	android:gravity="center_horizontal" />
+                    
+                    <!-- Buton comanda vocala -->
+                    <Button
+                        android:id = "@+id/VoiceControl"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+						android:layout_below="@id/bDraw"
+						android:text="Voice Control"
+					    android:layout_centerHorizontal="true" 
+					    android:textColor="#FFFFFF"
+                        />
                 </RelativeLayout>
             </RelativeLayout>
 

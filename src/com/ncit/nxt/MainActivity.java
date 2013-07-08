@@ -1,12 +1,19 @@
 package com.ncit.nxt;
 import java.util.ArrayList;
+import java.util.List;
 
+import javax.security.auth.PrivateCredentialPermission;
+
+import android.R.integer;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -16,10 +23,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
+import android.speech.RecognizerIntent;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,6 +38,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.SeekBar;
@@ -44,6 +54,7 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 	private static final int REQUEST_ENABLE_BT = 1;
 	private static final int REQUEST_CONNECT_DEVICE = 2;
 	private static final int REQUEST_SETTINGS = 3;
+	private static final int RESULT_SPEECH = 4;
 
 	public static final int MESSAGE_TOAST = 1;
 	public static final int MESSAGE_STATE_CHANGE = 2;
@@ -61,11 +72,10 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 	private String mDeviceAddress = null;
 
 	private ArrayList<ImageButton> motorButtons = new ArrayList<ImageButton>();
-	private Button testConnectButton;
 	private Button switchButton;
 
 	//Buton selectare mod scriere: 0 - Vertical, 1 - Orizontal etc.
-	private Button bSwitchDrawMode;
+	private Button bDraw;
 
 	//Variabila pentru modul de desenare selectat
 	private int drawMode = 0;
@@ -89,15 +99,26 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 
 	private int speedMotors[] = new int[3];	
 	private SeekBar seekBars[] = new SeekBar[3];	
-	private Button bVerticalLine;
 	//putere pentru desenare
 	private byte drawPower[] = new byte[3];
 	private Letters letters;
 
 	private TabHost mTabHost;
 	private TabSpec tab1, tab2, tab3;
-	
+
 	private ArrayList<ImageView> sensorImages = new ArrayList<ImageView>();
+
+	//drawmode
+	private TextView number;
+	private ImageButton decrement;
+	private ImageButton increment;
+	private String[] numbers = {"0","1","2","3","4","5","6","7","8","9"};
+
+	//Voice Recognition
+	private Button voiceControl;
+
+	private static final int REQUEST_CODE = 1234;
+	private ListView resultList;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +126,7 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.activity_main);
-		
+
 		mTabHost=(TabHost)findViewById(R.id.tabHost);
 		mTabHost.setup();
 
@@ -117,26 +138,66 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 		tab2 = mTabHost.newTabSpec("Second");
 		tab2.setContent(R.id.tab2);
 		tab2.setIndicator("Sensor Mode");
-		
+
 		mTabHost.setOnTabChangedListener(new OnTabChangeListener() {
-			
+
 			@Override
 			public void onTabChanged(String tabId) {
+				
+				letters.stopAllMotors();
 				if (tabId.equals("Second")) {
+					sensorMode = true;
+					firstOrientation = true;
+					
 					//MotionHint Dialog
 					FragmentManager fm = getSupportFragmentManager();
-			        SensorHintsDialog sensorHintsDialog = new SensorHintsDialog();
-			        sensorHintsDialog.show(fm, "Motion Hint Dialog");
+					SensorHintsDialog sensorHintsDialog = new SensorHintsDialog();
+					sensorHintsDialog.show(fm, "Motion Hint Dialog");
+					
+				} else {
+					sensorMode = false;
 				}
 			}
 		});
-		
+
 		mTabHost.addTab(tab2);
 
 		tab3 = mTabHost.newTabSpec("Third");
 		tab3.setContent(R.id.tab3);
 		tab3.setIndicator("Draw Mode");
 		mTabHost.addTab(tab3);
+
+		number = (TextView) findViewById(R.id.number);
+		number.setText("0");
+		
+		decrement = (ImageButton) findViewById(R.id.bDecrement);
+		increment = (ImageButton) findViewById(R.id.bIncrement);
+
+		decrement.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				String i = number.getText().toString();
+				if(Integer.parseInt(i) > 0){
+					number.setText(numbers[Integer.parseInt(i)-1]);
+				}else{
+					number.setText("9");
+				}
+			}
+		} );
+
+		increment.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				String i = number.getText().toString();
+				if(Integer.parseInt(i) < numbers.length -1){
+					number.setText(numbers[Integer.parseInt(i)+1]);
+				}else{
+					number.setText("0");
+				}
+			}
+		});
 
 		for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
 			TextView tView = (TextView) mTabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
@@ -204,8 +265,30 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 
 	@SuppressLint("NewApi")
 	private void setupUI() {
-		
-		
+
+		voiceControl = (Button) findViewById(R.id.VoiceControl);
+		voiceControl.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(
+						RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+				intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, "en-US");
+				intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+						"Only numbers from 0 to 9.");
+				intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 100);
+				try {
+					startActivityForResult(intent, RESULT_SPEECH);
+				} catch (ActivityNotFoundException a) {
+					Toast t = Toast.makeText(getApplicationContext(),
+							"Opps! Your device doesn't support Speech to Text",
+							Toast.LENGTH_SHORT);
+					t.show();
+				}
+			}
+		});
+
+
 		//Imagini animatie sensor
 		sensorImages.add((ImageView) findViewById(R.id.inactive_l20));
 		sensorImages.add((ImageView) findViewById(R.id.inactive_u0));
@@ -215,7 +298,7 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 		sensorImages.add((ImageView) findViewById(R.id.inactive_d1));
 		sensorImages.add((ImageView) findViewById(R.id.inactive_d0));
 		sensorImages.add((ImageView) findViewById(R.id.inactive_l21));
-		
+
 		//Assign motor buttons
 		motorButtons.add((ImageButton) findViewById(R.id.m1b1));
 		motorButtons.add((ImageButton) findViewById(R.id.m1b2));
@@ -231,55 +314,13 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 		seekBars[2] = (SeekBar) findViewById(R.id.speedM3);
 
 		//Buton selectare mod desenare
-		bSwitchDrawMode = (Button) findViewById(R.id.bSwitchDrawMode);
-		bSwitchDrawMode.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				drawMode = (drawMode + 1) % noDrawingModes;
-
-				if (drawMode == 0) {
-					bVerticalLine.setText("0");
-				}
-				if (drawMode == 1) {
-					bVerticalLine.setText("1");
-				}
-				if (drawMode == 2) {
-					bVerticalLine.setText("2");
-				}
-				if (drawMode == 3) {
-					bVerticalLine.setText("3");
-				}
-				if (drawMode == 4) {
-					bVerticalLine.setText("4");
-				}
-				if (drawMode == 5) {
-					bVerticalLine.setText("5");
-				}
-				if (drawMode == 6) {
-					bVerticalLine.setText("6");
-				}
-				if (drawMode == 7) {
-					bVerticalLine.setText("7");
-				}
-				if (drawMode == 8) {
-					bVerticalLine.setText("8");
-				}
-				if (drawMode == 9) {
-					bVerticalLine.setText("9");
-				}
-			}
-		});
+		bDraw = (Button) findViewById(R.id.bDraw);
+		bDraw.setOnClickListener(new DrawLettersOnClickListener(letters,this));
 
 		//Afisare viteze motoare conform seekBars
 		tvShowSpeeds[0] = (TextView) findViewById(R.id.tvShowSpeed1);
 		tvShowSpeeds[1] = (TextView) findViewById(R.id.tvShowSpeed2);
 		tvShowSpeeds[2] = (TextView) findViewById(R.id.tvShowSpeed3);
-		
-		//Buton pentru desenare linie verticala
-		bVerticalLine = (Button) findViewById(R.id.bVerticalLine);		
-		bVerticalLine.setOnClickListener(new DrawLettersOnClickListener(letters,this));
 
 		//Seteaza valoarea initiala pentru seekBars;
 		for (int i = 0; i < speedMotors.length; i++) {
@@ -358,38 +399,30 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 			}
 		}
 
-		testConnectButton = (Button) findViewById(R.id.testconnectbutton);
-		testConnectButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				findBrick();
-			}
-		});
-
-		mTabHost.getTabWidget().getChildAt(1).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mTabHost.setCurrentTab(1);
-				sensorMode = true;
-				mNXTTalker.motor(NXTTalker.MOTOR1, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
-				mNXTTalker.motor(NXTTalker.MOTOR2, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
-				mNXTTalker.motor(NXTTalker.MOTOR3, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
-				if (sensorMode) {
-					firstOrientation = true;
-				}				
-			}
-		});
+//		mTabHost.getTabWidget().getChildAt(1).setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				mTabHost.setCurrentTab(1);
+//				sensorMode = true;
+//				mNXTTalker.motor(NXTTalker.MOTOR1, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
+//				mNXTTalker.motor(NXTTalker.MOTOR2, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
+//				mNXTTalker.motor(NXTTalker.MOTOR3, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
+//				if (sensorMode) {
+//					firstOrientation = true;
+//				}				
+//			}
+//		});
 		displayState();
-		
-		
-		mTabHost.getTabWidget().getChildAt(0).setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				sensorMode = false;
-				mTabHost.setCurrentTab(0);
-			}
-		});		
+//
+//
+//		mTabHost.getTabWidget().getChildAt(0).setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				sensorMode = false;
+//				mTabHost.setCurrentTab(0);
+//			}
+//		});		
 	}
 
 	@Override
@@ -415,7 +448,17 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 		case REQUEST_SETTINGS:
 			//XXX?
 			break;
+
+		case RESULT_SPEECH:
+			if (resultCode == RESULT_OK && data != null) {
+				ArrayList<String> text = data
+						.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+				
+				recognizeAndDraw(text.get(0));
+			}
+			break;
 		}
+
 	}
 
 	private void displayState() {
@@ -524,7 +567,6 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -565,7 +607,7 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 				//Motor 0:
 				if (Math.abs(linear_acceleration[0])>5) {
 					byte power = (byte) (20*Math.signum(linear_acceleration[0]));
-					
+
 					//Schimbare imagine sensor in functie de orientare, pentru motorul 0
 					//Motor activ
 					if (linear_acceleration[0] > 0) {
@@ -573,23 +615,23 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 					} else {
 						sensorImages.get(1).setImageResource(R.drawable.active_u0);
 					}
-					
+
 					//Activare motor
 					mNXTTalker.motor(mNXTTalker.MOTOR1, power, mRegulateSpeed, mSynchronizeMotors);
-					
+
 				} else {
 					//Motor inactiv
 					sensorImages.get(1).setImageResource(R.drawable.inactive_u0);
 					sensorImages.get(6).setImageResource(R.drawable.inactive_d0);
-					
+
 					//Dezactivare motor
 					mNXTTalker.motor(mNXTTalker.MOTOR1, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
 				}
-				
+
 				//Motor 1:
 				if (Math.abs(linear_acceleration[1])>4) {
 					byte power = (byte) (20*Math.signum(linear_acceleration[1]));
-					
+
 					//Schimbare imagine sensor in functie de orientare, pentru motorul 0
 					//Motor activ					
 					if (linear_acceleration[1] > 0) {
@@ -597,14 +639,14 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 					} else {
 						sensorImages.get(5).setImageResource(R.drawable.active_d1);
 					}
-					
+
 					//Activare motor:
 					mNXTTalker.motor(mNXTTalker.MOTOR2, power, mRegulateSpeed, mSynchronizeMotors);
 				} else {
 					//Motor inactiv
 					sensorImages.get(2).setImageResource(R.drawable.inactive_u1);
 					sensorImages.get(5).setImageResource(R.drawable.inactive_d1);
-					
+
 					//Dezactivare motor
 					mNXTTalker.motor(mNXTTalker.MOTOR2, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
 				}
@@ -622,34 +664,34 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 					//Activare motor (la dreapta)
 					if (currentOri<180&&currentOri>30) {
 						byte power = (byte) (12);
-						
+
 						//Schimbare imagine (motor activ)
 						sensorImages.get(3).setImageResource(R.drawable.active_r20);
 						sensorImages.get(4).setImageResource(R.drawable.active_r21);
-						
+
 						//Activare motor:
 						mNXTTalker.motor(mNXTTalker.MOTOR3, power, mRegulateSpeed, mSynchronizeMotors);
-						
-					//Activare motor (la stanga)
+
+						//Activare motor (la stanga)
 					} else if (currentOri<330&&currentOri>180) {
 						byte power = (byte) (-12);
-						
+
 						//Schimbare imagine (motor activ)
 						sensorImages.get(0).setImageResource(R.drawable.active_l20);
 						sensorImages.get(7).setImageResource(R.drawable.active_l21);
-						
+
 						//Activare motor:
 						mNXTTalker.motor(mNXTTalker.MOTOR3, power, mRegulateSpeed, mSynchronizeMotors);
-						
-					//Oprire motor
+
+						//Oprire motor
 					} else {
-						
+
 						//Schimbare imagini (motor inactiv)
 						sensorImages.get(0).setImageResource(R.drawable.inactive_l20);
 						sensorImages.get(7).setImageResource(R.drawable.inactive_l21);
 						sensorImages.get(3).setImageResource(R.drawable.inactive_r20);
 						sensorImages.get(4).setImageResource(R.drawable.inactive_r21);
-						
+
 						//Oprire motor
 						mNXTTalker.motor(mNXTTalker.MOTOR3, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
 					}
@@ -661,6 +703,7 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 
 	@Override
 	public int getDrawMode() {
+		drawMode = Integer.parseInt(number.getText().toString());
 		return drawMode;
 	}
 
@@ -685,5 +728,91 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 		}
 
 	}
+
+	@Override
+	public boolean onOptionsItemSelected (MenuItem item){
+
+		// Connect
+		if (item.getItemId() == R.id.connectItem) {
+			findBrick();
+			return true;
+		}
+
+		// Activare Motion Hints
+		if (item.getItemId() == R.id.hintsItem) {
+
+			//MotionHint Dialog
+			FragmentManager fm = getSupportFragmentManager();
+			SensorHintsDialog sensorHintsDialog = new SensorHintsDialog();
+			sensorHintsDialog.show(fm, "Motion Hint Dialog");
+			return true;
+		}
+
+		return false;
+	}
+	
+	
+	public void recognizeAndDraw(String type) {
+		
+		int drawMode;
+		
+		try {
+			drawMode = Integer.parseInt(type);
+			if (drawMode >= 0 && drawMode <= 9) {
+				Toast.makeText(this, "Drawing: " + drawMode, Toast.LENGTH_LONG).show();
+			}
+			
+			switch (drawMode){
+			
+			case 0: 
+				letters.drawZero();
+				break;
+	
+			case 1:
+				letters.drawOne();
+				break;
+	
+			case 2:
+				letters.drawTwo();
+				break;
+	
+			case 3:
+				letters.drawThree();
+				break;
+	
+			case 4:
+				letters.drawFour();
+				break;
+	
+			case 5:
+				letters.drawFive();
+				break;
+	
+			case 6:
+				letters.drawSix();
+				break;
+	
+			case 7:
+				letters.drawSeven();
+				break;
+	
+			case 8:
+				letters.drawEight();
+				break;
+	
+			case 9:
+				letters.drawNine();
+				break;
+	
+			default: 
+				letters.stopAllMotors();
+				break;
+			}
+		} catch (NumberFormatException e){
+			e.printStackTrace();
+			Toast.makeText(this, "Only number support!", Toast.LENGTH_LONG).show();
+		}
+	}
+
 }
 
