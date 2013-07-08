@@ -399,30 +399,7 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 			}
 		}
 
-//		mTabHost.getTabWidget().getChildAt(1).setOnClickListener(new OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				mTabHost.setCurrentTab(1);
-//				sensorMode = true;
-//				mNXTTalker.motor(NXTTalker.MOTOR1, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
-//				mNXTTalker.motor(NXTTalker.MOTOR2, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
-//				mNXTTalker.motor(NXTTalker.MOTOR3, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
-//				if (sensorMode) {
-//					firstOrientation = true;
-//				}				
-//			}
-//		});
 		displayState();
-//
-//
-//		mTabHost.getTabWidget().getChildAt(0).setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				sensorMode = false;
-//				mTabHost.setCurrentTab(0);
-//			}
-//		});		
 	}
 
 	@Override
@@ -440,7 +417,6 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 			if (resultCode == Activity.RESULT_OK) {
 				String address = data.getExtras().getString(DeviceChooser.EXTRA_DEVICE_ADDRESS);
 				BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
-				//Toast.makeText(this, address, Toast.LENGTH_LONG).show();
 				mDeviceAddress = address;
 				mNXTTalker.connect(device);
 			}
@@ -543,11 +519,6 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 				if (action == MotionEvent.ACTION_DOWN) {
 					v.setPressed(true);
 					byte fPower = (byte) (speedMotors[motorBi] * sign);
-					Log.d("MMOD", "Motormod: "+motormod);
-					Log.d("cPWR", "Current Power: "+power);
-					Log.d("fPWR", "Final Power: "+fPower);
-
-					Log.d ("power1", "action= motor: " + motorB + " fpower: " + fPower);
 					mNXTTalker.motor(motorB, fPower, mRegulateSpeed, mSynchronizeMotors);
 				} else if ((action == MotionEvent.ACTION_UP) || (action == MotionEvent.ACTION_CANCEL)) {
 					v.setPressed(false);
@@ -612,8 +583,10 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 					//Motor activ
 					if (linear_acceleration[0] > 0) {
 						sensorImages.get(6).setImageResource(R.drawable.active_d0);
+						sensorImages.get(1).setImageResource(R.drawable.inactive_u0);
 					} else {
 						sensorImages.get(1).setImageResource(R.drawable.active_u0);
+						sensorImages.get(6).setImageResource(R.drawable.inactive_d0);
 					}
 
 					//Activare motor
@@ -636,8 +609,10 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 					//Motor activ					
 					if (linear_acceleration[1] > 0) {
 						sensorImages.get(2).setImageResource(R.drawable.active_u1);
+						sensorImages.get(5).setImageResource(R.drawable.inactive_d1);
 					} else {
 						sensorImages.get(5).setImageResource(R.drawable.active_d1);
+						sensorImages.get(2).setImageResource(R.drawable.inactive_u1);
 					}
 
 					//Activare motor:
@@ -668,6 +643,8 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 						//Schimbare imagine (motor activ)
 						sensorImages.get(3).setImageResource(R.drawable.active_r20);
 						sensorImages.get(4).setImageResource(R.drawable.active_r21);
+						sensorImages.get(0).setImageResource(R.drawable.inactive_l20);
+						sensorImages.get(7).setImageResource(R.drawable.inactive_l21);
 
 						//Activare motor:
 						mNXTTalker.motor(mNXTTalker.MOTOR3, power, mRegulateSpeed, mSynchronizeMotors);
@@ -679,6 +656,8 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 						//Schimbare imagine (motor activ)
 						sensorImages.get(0).setImageResource(R.drawable.active_l20);
 						sensorImages.get(7).setImageResource(R.drawable.active_l21);
+						sensorImages.get(3).setImageResource(R.drawable.inactive_r20);
+						sensorImages.get(4).setImageResource(R.drawable.inactive_r21);
 
 						//Activare motor:
 						mNXTTalker.motor(mNXTTalker.MOTOR3, power, mRegulateSpeed, mSynchronizeMotors);

@@ -51,11 +51,12 @@ public final class R {
         public static final int inactive_r21=0x7f02001b;
         public static final int inactive_u0=0x7f02001c;
         public static final int inactive_u1=0x7f02001d;
-        public static final int phone_model=0x7f02001e;
-        public static final int transparent_rectangle=0x7f02001f;
-        public static final int transparent_vertical_line=0x7f020020;
-        public static final int white_rectangle=0x7f020021;
-        public static final int white_vertical_line=0x7f020022;
+        public static final int logo=0x7f02001e;
+        public static final int phone_model=0x7f02001f;
+        public static final int transparent_rectangle=0x7f020020;
+        public static final int transparent_vertical_line=0x7f020021;
+        public static final int white_rectangle=0x7f020022;
+        public static final int white_vertical_line=0x7f020023;
     }
     public static final class id {
         public static final int VoiceControl=0x7f080026;
