@@ -1,6 +1,5 @@
 package com.ncit.nxt;
 
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -18,7 +17,6 @@ public class DrawLettersOnClickListener implements OnClickListener {
 	public void onClick(View v) {
 
 		Thread control = new Thread(new Runnable() {
-			int sleepTime = 500;
 			int drawMode = drawModeCall.getDrawMode();
 			@Override
 			public void run() {
