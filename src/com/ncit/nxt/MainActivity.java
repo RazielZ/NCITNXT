@@ -1,10 +1,6 @@
 package com.ncit.nxt;
 import java.util.ArrayList;
-import java.util.List;
 
-import javax.security.auth.PrivateCredentialPermission;
-
-import android.R.integer;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -12,8 +8,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -23,6 +18,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
+import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -36,6 +32,9 @@ import android.view.View.OnLayoutChangeListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -119,6 +118,13 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 
 	private static final int REQUEST_CODE = 1234;
 	private ListView resultList;
+	
+	//Don't show this again var:
+	private static final String SHOW_HINTS = "show_hints";
+	private CheckBox checkBox;
+	private boolean showHints;
+	SharedPreferences shPrefs;
+	SharedPreferences.Editor shPrefsEditor;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -126,7 +132,13 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.activity_main);
-
+		
+		// Don't show hints again
+		shPrefs = getSharedPreferences("show_hints", MODE_PRIVATE);
+		shPrefsEditor = shPrefs.edit();
+		shPrefsEditor.putBoolean(SHOW_HINTS, false);
+		shPrefsEditor.commit();
+		
 		mTabHost=(TabHost)findViewById(R.id.tabHost);
 		mTabHost.setup();
 
@@ -152,7 +164,12 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 					//MotionHint Dialog
 					FragmentManager fm = getSupportFragmentManager();
 					SensorHintsDialog sensorHintsDialog = new SensorHintsDialog();
-					sensorHintsDialog.show(fm, "Motion Hint Dialog");
+					
+					showHints = shPrefs.getBoolean(SHOW_HINTS, true);
+					Log.d("prefs", "pref1= " + shPrefs.getBoolean("show_hints", true));
+					if (showHints == false) {
+						sensorHintsDialog.show(fm, "Motion Hint Dialog");
+					}
 					
 				} else {
 					sensorMode = false;
@@ -265,7 +282,7 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 
 	@SuppressLint("NewApi")
 	private void setupUI() {
-
+		
 		voiceControl = (Button) findViewById(R.id.VoiceControl);
 		voiceControl.setOnClickListener(new OnClickListener() {
 

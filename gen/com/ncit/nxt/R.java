@@ -60,19 +60,21 @@ public final class R {
     }
     public static final class id {
         public static final int VoiceControl=0x7f080026;
-        public static final int action_settings=0x7f080034;
+        public static final int action_settings=0x7f080036;
         public static final int anchor=0x7f080017;
         public static final int bDecrement=0x7f080022;
         public static final int bDraw=0x7f080024;
         public static final int bIncrement=0x7f080023;
+        public static final int bOk=0x7f080035;
         public static final int button_scan=0x7f080005;
         public static final int centerHorizontal=0x7f08002b;
-        public static final int connectItem=0x7f080035;
+        public static final int checkBox=0x7f080034;
+        public static final int connectItem=0x7f080037;
         public static final int hint1=0x7f08002a;
         public static final int hint2=0x7f08002e;
         public static final int hint3=0x7f080031;
         public static final int hintRelativeLayout=0x7f080029;
-        public static final int hintsItem=0x7f080036;
+        public static final int hintsItem=0x7f080038;
         public static final int inactive_d0=0x7f08001e;
         public static final int inactive_d1=0x7f08001f;
         public static final int inactive_l20=0x7f08001a;
