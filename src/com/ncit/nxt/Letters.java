@@ -27,6 +27,17 @@ public class Letters {
 		stopAllMotors();
 	}
 	
+	public void activateAllMotors (int speedMotor0, int speedMotor1, int speedMotor2) {
+		
+		drawPower[0] = (byte) speedMotor0;
+		drawPower[1] = (byte) speedMotor1;
+		drawPower[2] = (byte) speedMotor2;
+		
+		mNXTTalker.motor(NXTTalker.MOTOR1, drawPower[0], true, false);
+		mNXTTalker.motor(NXTTalker.MOTOR2, drawPower[1], true, false);
+		mNXTTalker.motor(NXTTalker.MOTOR3, drawPower[2], true, false);
+	}
+	
 	public void drawZero() {
 		Thread draw = new Thread (new Runnable() {
 
@@ -49,7 +60,7 @@ public class Letters {
 					stopAllMotors();
 
 					//Left
-					activateAllMotors (3, 5, -10);
+					activateAllMotors (3, 5, -8);
 					Thread.sleep(400);
 					stopAllMotors();
 
@@ -85,18 +96,28 @@ public class Letters {
 			@Override
 			public void run() {
 				try {
-					//Up
-					activateAllMotors (-7, -12, 0);
-					Thread.sleep(400);
+//					//Up
+//					activateAllMotors (-7, -12, 0);
+//					Thread.sleep(400);
 					
 					//Left-Down (Diagonal)
-					activateAllMotors (12, 7, -12);
-					Thread.sleep(250);
-					stopAllMotors();
+//					activateAllMotors (8, 7, -8);
+//					Thread.sleep(250);
+//					stopAllMotors();
+//					Thread.sleep(400);
+					
+					//Up
+					activateAllMotors (-5, -10, 0);
 					Thread.sleep(400);
+					stopAllMotors();
+
+					//Up
+					activateAllMotors (-5, -10, 0);
+					Thread.sleep(400);
+					stopAllMotors();
 					
 					//Arm Up
-					activateAllMotors(-20, 30, 0);
+					activateAllMotors(-15, 30, 0);
 					Thread.sleep(400);
 					stopAllMotors();
 					
@@ -112,17 +133,6 @@ public class Letters {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	public void activateAllMotors (int speedMotor0, int speedMotor1, int speedMotor2) {
-		
-		drawPower[0] = (byte) speedMotor0;
-		drawPower[1] = (byte) speedMotor1;
-		drawPower[2] = (byte) speedMotor2;
-		
-		mNXTTalker.motor(NXTTalker.MOTOR1, drawPower[0], true, false);
-		mNXTTalker.motor(NXTTalker.MOTOR2, drawPower[1], true, false);
-		mNXTTalker.motor(NXTTalker.MOTOR3, drawPower[2], true, false);
 	}
 	
 	public void drawTwo () {
@@ -146,7 +156,7 @@ public class Letters {
 					stopAllMotors();
 					
 					//Right
-					activateAllMotors (2, 0, 8);
+					activateAllMotors (3, 0, 10);
 					Thread.sleep(400);
 					stopAllMotors();
 					
@@ -173,41 +183,6 @@ public class Letters {
 		draw.start();
 	}
 	
-	public void drawSeven () {
-		Thread draw = new Thread (new Runnable() {
-
-			@Override
-			public void run() {
-				try {
-					//Up
-					activateAllMotors (-4, -8, 0);
-					Thread.sleep(600);
-					
-					//Left
-					activateAllMotors(-2, 0, -5);
-					Thread.sleep(500);
-					stopAllMotors();
-					
-					//Down
-					activateAllMotors(4, 1, 0);
-					Thread.sleep(300);
-					stopAllMotors();
-					Thread.sleep(300);
-					
-					pennUp ();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		});
-		draw.start();
-		try {
-			draw.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-	
 	public void drawThree () {
 		Thread draw = new Thread (new Runnable() {
 
@@ -232,7 +207,7 @@ public class Letters {
 					Thread.sleep(500);
 					
 					//Right
-					activateAllMotors (0, 0, 8);
+					activateAllMotors (0, 3, 10);
 					Thread.sleep(400);
 					stopAllMotors();
 					
@@ -326,7 +301,7 @@ public class Letters {
 					stopAllMotors();
 					
 					//Left
-					activateAllMotors (0, 3, -8);
+					activateAllMotors (0, 3, -10);
 					Thread.sleep(400);
 					stopAllMotors();
 					
@@ -336,7 +311,7 @@ public class Letters {
 					stopAllMotors();
 					
 					//Right
-					activateAllMotors (0, 4, 7);
+					activateAllMotors (0, 4, 8);
 					Thread.sleep(500);
 					stopAllMotors();
 					Thread.sleep(400);
@@ -401,6 +376,41 @@ public class Letters {
 					
 					pennUp();
 					
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		draw.start();
+		try {
+			draw.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void drawSeven () {
+		Thread draw = new Thread (new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					//Up
+					activateAllMotors (-4, -8, 0);
+					Thread.sleep(600);
+					
+					//Left
+					activateAllMotors(-2, 0, -5);
+					Thread.sleep(500);
+					stopAllMotors();
+					
+					//Down
+					activateAllMotors(4, 1, 0);
+					Thread.sleep(300);
+					stopAllMotors();
+					Thread.sleep(300);
+					
+					pennUp ();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
