@@ -59,22 +59,23 @@ public final class R {
         public static final int white_vertical_line=0x7f020023;
     }
     public static final class id {
-        public static final int VoiceControl=0x7f080026;
-        public static final int action_settings=0x7f080036;
+        public static final int VoiceControl=0x7f080025;
+        public static final int action_settings=0x7f080035;
         public static final int anchor=0x7f080017;
         public static final int bDecrement=0x7f080022;
         public static final int bDraw=0x7f080024;
         public static final int bIncrement=0x7f080023;
-        public static final int bOk=0x7f080035;
+        public static final int bOk=0x7f08002b;
         public static final int button_scan=0x7f080005;
-        public static final int centerHorizontal=0x7f08002b;
-        public static final int checkBox=0x7f080034;
-        public static final int connectItem=0x7f080037;
-        public static final int hint1=0x7f08002a;
-        public static final int hint2=0x7f08002e;
-        public static final int hint3=0x7f080031;
-        public static final int hintRelativeLayout=0x7f080029;
-        public static final int hintsItem=0x7f080038;
+        public static final int centerHorizontal=0x7f08002c;
+        public static final int checkBox=0x7f08002a;
+        public static final int connectItem=0x7f080036;
+        public static final int drawHintsItem=0x7f080038;
+        public static final int hint1=0x7f080029;
+        public static final int hint2=0x7f08002f;
+        public static final int hint3=0x7f080032;
+        public static final int hintRelativeLayout=0x7f080028;
+        public static final int hintsItem=0x7f080037;
         public static final int inactive_d0=0x7f08001e;
         public static final int inactive_d1=0x7f08001f;
         public static final int inactive_l20=0x7f08001a;
@@ -83,13 +84,12 @@ public final class R {
         public static final int inactive_r21=0x7f08001d;
         public static final int inactive_u0=0x7f080018;
         public static final int inactive_u1=0x7f080019;
-        public static final int infoDraw=0x7f080025;
-        public static final int ivHint_d0=0x7f08002c;
-        public static final int ivHint_d1=0x7f08002f;
-        public static final int ivHint_l=0x7f080032;
-        public static final int ivHint_r=0x7f080033;
-        public static final int ivHint_u0=0x7f08002d;
-        public static final int ivHint_u1=0x7f080030;
+        public static final int ivHint_d0=0x7f08002d;
+        public static final int ivHint_d1=0x7f080030;
+        public static final int ivHint_l=0x7f080033;
+        public static final int ivHint_r=0x7f080034;
+        public static final int ivHint_u0=0x7f08002e;
+        public static final int ivHint_u1=0x7f080031;
         public static final int m1b1=0x7f08000c;
         public static final int m1b2=0x7f080009;
         public static final int m2b1=0x7f08000d;
@@ -100,14 +100,14 @@ public final class R {
         public static final int no_devices=0x7f080004;
         public static final int number=0x7f080021;
         public static final int paired_devices=0x7f080001;
-        public static final int scrollView=0x7f080028;
+        public static final int scrollView=0x7f080027;
         public static final int speedM1=0x7f08000f;
         public static final int speedM2=0x7f080010;
         public static final int speedM3=0x7f080011;
         public static final int tab1=0x7f080007;
         public static final int tab2=0x7f080015;
         public static final int tab3=0x7f080020;
-        public static final int tab4=0x7f080027;
+        public static final int tab4=0x7f080026;
         public static final int tabHost=0x7f080006;
         public static final int testtext=0x7f080008;
         public static final int title_new_devices=0x7f080002;
@@ -121,7 +121,8 @@ public final class R {
         public static final int activity_device_chooser=0x7f030000;
         public static final int activity_main=0x7f030001;
         public static final int device_name=0x7f030002;
-        public static final int hints_dialog=0x7f030003;
+        public static final int draw_hints_dialog=0x7f030003;
+        public static final int hints_dialog=0x7f030004;
     }
     public static final class menu {
         public static final int device_chooser=0x7f070000;
@@ -130,8 +131,9 @@ public final class R {
     public static final class string {
         public static final int action_settings=0x7f050001;
         public static final int app_name=0x7f050000;
-        public static final int connect=0x7f050005;
-        public static final int drawModeText=0x7f050006;
+        public static final int connect=0x7f050006;
+        public static final int drawHint=0x7f050005;
+        public static final int drawModeText=0x7f050007;
         public static final int hello_world=0x7f050002;
         public static final int sensorHint=0x7f050004;
         public static final int title_activity_device_chooser=0x7f050003;

@@ -18,7 +18,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
-import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -32,12 +31,8 @@ import android.view.View.OnLayoutChangeListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.SeekBar;
@@ -52,7 +47,7 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 
 	private static final int REQUEST_ENABLE_BT = 1;
 	private static final int REQUEST_CONNECT_DEVICE = 2;
-	private static final int REQUEST_SETTINGS = 3;
+	//private static final int REQUEST_SETTINGS = 3;
 	private static final int RESULT_SPEECH = 4;
 
 	public static final int MESSAGE_TOAST = 1;
@@ -71,15 +66,12 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 	private String mDeviceAddress = null;
 
 	private ArrayList<ImageButton> motorButtons = new ArrayList<ImageButton>();
-	private Button switchButton;
 
 	//Buton selectare mod scriere: 0 - Vertical, 1 - Orizontal etc.
 	private Button bDraw;
 
 	//Variabila pentru modul de desenare selectat
 	private int drawMode = 0;
-	//Variabila pentru nr total de moduri
-	private int noDrawingModes = 10;
 
 	//Status conexiune
 	private TextView testStatusTextView; 
@@ -99,7 +91,6 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 	private int speedMotors[] = new int[3];	
 	private SeekBar seekBars[] = new SeekBar[3];	
 	//putere pentru desenare
-	private byte drawPower[] = new byte[3];
 	private Letters letters;
 
 	private TabHost mTabHost;
@@ -115,14 +106,9 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 
 	//Voice Recognition
 	private Button voiceControl;
-
-	private static final int REQUEST_CODE = 1234;
-	private ListView resultList;
 	
 	//Don't show this again var:
-	private static final String SHOW_HINTS = "show_hints";
-	private CheckBox checkBox;
-	private boolean showHints;
+	private boolean hideHints;
 	SharedPreferences shPrefs;
 	SharedPreferences.Editor shPrefsEditor;
 
@@ -135,9 +121,6 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 		
 		// Don't show hints again
 		shPrefs = getSharedPreferences("show_hints", MODE_PRIVATE);
-		shPrefsEditor = shPrefs.edit();
-		shPrefsEditor.putBoolean(SHOW_HINTS, false);
-		shPrefsEditor.commit();
 		
 		mTabHost=(TabHost)findViewById(R.id.tabHost);
 		mTabHost.setup();
@@ -150,7 +133,14 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 		tab2 = mTabHost.newTabSpec("Second");
 		tab2.setContent(R.id.tab2);
 		tab2.setIndicator("Sensor Mode");
+		mTabHost.addTab(tab2);
 
+		tab3 = mTabHost.newTabSpec("Third");
+		tab3.setContent(R.id.tab3);
+		tab3.setIndicator("Draw Mode");
+		mTabHost.addTab(tab3);
+
+		
 		mTabHost.setOnTabChangedListener(new OnTabChangeListener() {
 
 			@Override
@@ -165,24 +155,27 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 					FragmentManager fm = getSupportFragmentManager();
 					SensorHintsDialog sensorHintsDialog = new SensorHintsDialog();
 					
-					showHints = shPrefs.getBoolean(SHOW_HINTS, true);
-					Log.d("prefs", "pref1= " + shPrefs.getBoolean("show_hints", true));
-					if (showHints == false) {
+					hideHints = shPrefs.getBoolean("hide_sensor_hints", false);
+					if (!hideHints) {
 						sensorHintsDialog.show(fm, "Motion Hint Dialog");
 					}
 					
 				} else {
 					sensorMode = false;
+					if (tabId.equals("Third")) {
+						//MotionHint Dialog
+						Log.d("DERP", "Starting draw hint dialog");
+						FragmentManager fm = getSupportFragmentManager();
+						DrawHintsDialog drawHintsDialog = new DrawHintsDialog();
+						hideHints = shPrefs.getBoolean("hide_draw_hints", false);
+						if (!hideHints) {
+							drawHintsDialog.show(fm, "Draw Hint Dialog");
+						}
+					}
 				}
 			}
 		});
 
-		mTabHost.addTab(tab2);
-
-		tab3 = mTabHost.newTabSpec("Third");
-		tab3.setContent(R.id.tab3);
-		tab3.setIndicator("Draw Mode");
-		mTabHost.addTab(tab3);
 
 		number = (TextView) findViewById(R.id.number);
 		number.setText("0");
@@ -438,10 +431,6 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 				mNXTTalker.connect(device);
 			}
 			break;
-		case REQUEST_SETTINGS:
-			//XXX?
-			break;
-
 		case RESULT_SPEECH:
 			if (resultCode == RESULT_OK && data != null) {
 				ArrayList<String> text = data
@@ -508,15 +497,11 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 
 	private class MotorButtonListener implements OnTouchListener {
 
-		private double motormod;
-		private int power;
 		private int sign;
 		private byte motorB;
 		private int motorBi;
 
 		public MotorButtonListener(int motor, int dir, double powerMod, int ppower) {
-			motormod = powerMod;
-			power = dir;
 			sign = dir;
 			Log.d("power1", "PowerInitial: "+ppower);
 			switch (motor){ 
@@ -607,7 +592,7 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 					}
 
 					//Activare motor
-					mNXTTalker.motor(mNXTTalker.MOTOR1, power, mRegulateSpeed, mSynchronizeMotors);
+					mNXTTalker.motor(NXTTalker.MOTOR1, power, mRegulateSpeed, mSynchronizeMotors);
 
 				} else {
 					//Motor inactiv
@@ -615,7 +600,7 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 					sensorImages.get(6).setImageResource(R.drawable.inactive_d0);
 
 					//Dezactivare motor
-					mNXTTalker.motor(mNXTTalker.MOTOR1, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
+					mNXTTalker.motor(NXTTalker.MOTOR1, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
 				}
 
 				//Motor 1:
@@ -633,14 +618,14 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 					}
 
 					//Activare motor:
-					mNXTTalker.motor(mNXTTalker.MOTOR2, power, mRegulateSpeed, mSynchronizeMotors);
+					mNXTTalker.motor(NXTTalker.MOTOR2, power, mRegulateSpeed, mSynchronizeMotors);
 				} else {
 					//Motor inactiv
 					sensorImages.get(2).setImageResource(R.drawable.inactive_u1);
 					sensorImages.get(5).setImageResource(R.drawable.inactive_d1);
 
 					//Dezactivare motor
-					mNXTTalker.motor(mNXTTalker.MOTOR2, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
+					mNXTTalker.motor(NXTTalker.MOTOR2, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
 				}
 			} else {
 				//Motor 2:
@@ -664,7 +649,7 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 						sensorImages.get(7).setImageResource(R.drawable.inactive_l21);
 
 						//Activare motor:
-						mNXTTalker.motor(mNXTTalker.MOTOR3, power, mRegulateSpeed, mSynchronizeMotors);
+						mNXTTalker.motor(NXTTalker.MOTOR3, power, mRegulateSpeed, mSynchronizeMotors);
 
 						//Activare motor (la stanga)
 					} else if (currentOri<330&&currentOri>180) {
@@ -677,7 +662,7 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 						sensorImages.get(4).setImageResource(R.drawable.inactive_r21);
 
 						//Activare motor:
-						mNXTTalker.motor(mNXTTalker.MOTOR3, power, mRegulateSpeed, mSynchronizeMotors);
+						mNXTTalker.motor(NXTTalker.MOTOR3, power, mRegulateSpeed, mSynchronizeMotors);
 
 						//Oprire motor
 					} else {
@@ -689,7 +674,7 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 						sensorImages.get(4).setImageResource(R.drawable.inactive_r21);
 
 						//Oprire motor
-						mNXTTalker.motor(mNXTTalker.MOTOR3, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
+						mNXTTalker.motor(NXTTalker.MOTOR3, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
 					}
 				}
 			}
@@ -741,6 +726,16 @@ public class MainActivity extends FragmentActivity implements SensorEventListene
 			FragmentManager fm = getSupportFragmentManager();
 			SensorHintsDialog sensorHintsDialog = new SensorHintsDialog();
 			sensorHintsDialog.show(fm, "Motion Hint Dialog");
+			return true;
+		}
+		
+		// Activare Draw Hints
+		if (item.getItemId() == R.id.drawHintsItem) {
+
+			//MotionHint Dialog
+			FragmentManager fm = getSupportFragmentManager();
+			DrawHintsDialog drawHintsDialog = new DrawHintsDialog();
+			drawHintsDialog.show(fm, "Draw Hints Dialog");
 			return true;
 		}
 

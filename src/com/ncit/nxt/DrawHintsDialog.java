@@ -13,36 +13,36 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
-public class SensorHintsDialog extends DialogFragment {
+public class DrawHintsDialog extends DialogFragment {
 	
 	private CheckBox checkBox;
 	private SharedPreferences shPrefs;
 	private SharedPreferences.Editor shPrefsEditor;
 	private Button bOk;
 	
-	public SensorHintsDialog() {
+	public DrawHintsDialog() {
 	}
 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
 		
-        View view = inflater.inflate(R.layout.hints_dialog, container);
-        getDialog().setTitle("Motion Hints");
+        View view = inflater.inflate(R.layout.draw_hints_dialog, container);
+        getDialog().setTitle("Draw Hints");
         
         shPrefs = getActivity().getSharedPreferences("show_hints", 0);
         shPrefsEditor = shPrefs.edit();
         
 		//Dont't show again button
 		checkBox = (CheckBox) view.findViewById(R.id.checkBox);
-		if (shPrefs.getBoolean("hide_sensor_hints", false) == true) {
+		if (shPrefs.getBoolean("hide_draw_hints", false) == true) {
 			checkBox.setChecked(true);
 		}
 		checkBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 		
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				shPrefsEditor.putBoolean("hide_sensor_hints", isChecked);
+				shPrefsEditor.putBoolean("hide_draw_hints", isChecked);
 				shPrefsEditor.commit();
 				Log.d("prefs", "pref= " + shPrefs.getBoolean("show_hints", true));
 			}
