@@ -301,7 +301,7 @@ public class Letters {
 					stopAllMotors();
 					
 					//Left
-					activateAllMotors (0, 3, -10);
+					activateAllMotors (0, 3, -9);
 					Thread.sleep(400);
 					stopAllMotors();
 					
@@ -339,7 +339,7 @@ public class Letters {
 				try {
 					
 					//Right
-					activateAllMotors (0, 0, 7);
+					activateAllMotors (0, 0, 9);
 					Thread.sleep(400);
 					stopAllMotors();
 					
@@ -349,7 +349,7 @@ public class Letters {
 					stopAllMotors();
 					
 					//Left
-					activateAllMotors (0, 3, -8);
+					activateAllMotors (-2, 3, -8);
 					Thread.sleep(450);
 					stopAllMotors();
 					
@@ -369,7 +369,7 @@ public class Letters {
 					stopAllMotors();
 					
 					//Right
-					activateAllMotors (0, 4, 7);
+					activateAllMotors (0, 4, 8);
 					Thread.sleep(500);
 					stopAllMotors();
 					Thread.sleep(400);
@@ -395,13 +395,23 @@ public class Letters {
 			@Override
 			public void run() {
 				try {
+//					//Up
+//					activateAllMotors (-4, -8, 0);
+//					Thread.sleep(600);
+					
 					//Up
-					activateAllMotors (-4, -8, 0);
-					Thread.sleep(600);
+					activateAllMotors (-5, -10, 0);
+					Thread.sleep(400);
+					stopAllMotors();
+
+					//Up
+					activateAllMotors (-5, -10, 0);
+					Thread.sleep(400);
+					stopAllMotors();					
 					
 					//Left
-					activateAllMotors(-2, 0, -5);
-					Thread.sleep(500);
+					activateAllMotors(-2, 3, -8);
+					Thread.sleep(450);
 					stopAllMotors();
 					
 					//Down
@@ -448,7 +458,7 @@ public class Letters {
 
 					//Left
 					activateAllMotors (0, 3, -8);
-					Thread.sleep(450);
+					Thread.sleep(420);
 					stopAllMotors();
 
 					//Down
@@ -462,7 +472,7 @@ public class Letters {
 					stopAllMotors();
 
 					//Up
-					activateAllMotors (-5, -15, 0);
+					activateAllMotors (-7, -12, 0);
 					Thread.sleep(400);
 					stopAllMotors();
 
@@ -525,8 +535,8 @@ public class Letters {
 					stopAllMotors();
 
 					//Right
-					activateAllMotors (0, 4, 7);
-					Thread.sleep(500);
+					activateAllMotors (0, 4, 10);
+					Thread.sleep(400);
 					stopAllMotors();
 
 					Thread.sleep(400);
