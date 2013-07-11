@@ -251,14 +251,23 @@
                     android:textAlignment="center" >
 
                     <!-- textview number choose -->
+                    
+                    <Button
+                        android:id="@+id/bDraw"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:text="Draw"
+                        android:textColor="#FFFFFF" />
 
                     <TextView
                         android:id="@+id/number"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:padding="10dp"
+                        android:layout_above="@id/bDraw"
+                        android:padding="20dp"
                         android:text="5"
                         android:textColor="#FFFFFF" />
                     <!-- button decrement -->
@@ -268,6 +277,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
+                        android:layout_above="@id/bDraw"
                         android:layout_toLeftOf="@id/number"
                         android:src="@drawable/arrow_l2" />
 
@@ -276,18 +286,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
+                        android:layout_above="@id/bDraw"
                         android:layout_toRightOf="@id/number"
                         android:src="@drawable/arrow_r2" />
                     <!-- Buton de desenare; trebuie sa ia valoarea din textview la click si sa deseneze cifra din textview -->
-
-                    <Button
-                        android:id="@+id/bDraw"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/bDecrement"
-                        android:layout_centerHorizontal="true"
-                        android:text="Draw"
-                        android:textColor="#FFFFFF" />
 
                     <!-- Buton comanda vocala -->
 
